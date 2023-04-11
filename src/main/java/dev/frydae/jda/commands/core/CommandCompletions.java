@@ -16,6 +16,9 @@ public final class CommandCompletions {
     private final Map<String, Function<CommandOptionContext, List<Choice>>> resolverMap;
     private final Map<String, Function<CommandAutoCompletionContext, List<Choice>>> autoResolverMap;
 
+    /**
+     * Creates a new command completion manager.
+     */
     CommandCompletions() {
         resolverMap = Maps.newHashMap();
         autoResolverMap = Maps.newHashMap();
@@ -91,18 +94,42 @@ public final class CommandCompletions {
         return resolver.apply(commandOptionContext);
     }
 
+    /**
+     * Registers a new completion resolver.
+     *
+     * @param input the input to search for
+     * @param resolver the resolver to register
+     */
     public void registerCompletion(String input, Function<CommandOptionContext, List<Choice>> resolver) {
         resolverMap.put(input, resolver);
     }
 
+    /**
+     * Registers a new auto completion resolver.
+     *
+     * @param input the input to search for
+     * @param resolver the resolver to register
+     */
     public void registerAutoCompletion(String input, Function<CommandAutoCompletionContext, List<Choice>> resolver) {
         autoResolverMap.put(input, resolver);
     }
 
+    /**
+     * Gets the resolver for a given input.
+     *
+     * @param input the input to search for
+     * @return the resolver for this input
+     */
     private Function<CommandOptionContext, List<Choice>> getResolver(String input) {
         return resolverMap.get(input);
     }
 
+    /**
+     * Gets the auto resolver for a given input.
+     *
+     * @param input the input to search for
+     * @return the auto resolver for this input
+     */
     public Function<CommandAutoCompletionContext, List<Choice>> getAutoResolver(String input) {
         return autoResolverMap.get(input);
     }

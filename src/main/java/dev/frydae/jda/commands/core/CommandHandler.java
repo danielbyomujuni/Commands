@@ -53,6 +53,14 @@ public final class CommandHandler {
         }
     }
 
+    /**
+     * Resolves the arguments for a {@link RegisteredCommand}.
+     *
+     * @param event the {@link SlashCommandInteractionEvent} to process
+     * @param command the {@link RegisteredCommand} to process
+     * @return the resolved arguments
+     * @throws IllegalCommandException if something goes wrong
+     */
     private static Object[] resolveArgs(SlashCommandInteractionEvent event, RegisteredCommand command) throws IllegalCommandException {
         List<Object> objects = Lists.newArrayList();
 
@@ -73,6 +81,16 @@ public final class CommandHandler {
         return objects.toArray();
     }
 
+    /**
+     * Resolves a parameter for a {@link RegisteredCommand}.
+     *
+     * @param event the {@link SlashCommandInteractionEvent} to process
+     * @param command the {@link RegisteredCommand} to process
+     * @param parameter the {@link CommandParameter} to process
+     * @param option the {@link OptionMapping} to process
+     * @return the resolved parameter
+     * @throws IllegalCommandException if something goes wrong
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static Object resolveParameter(SlashCommandInteractionEvent event, RegisteredCommand command, CommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         CommandExecutionContext context = new CommandExecutionContext(command, parameter, option, event);

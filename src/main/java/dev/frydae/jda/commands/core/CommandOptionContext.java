@@ -10,6 +10,15 @@ public class CommandOptionContext {
     @Getter private final String config;
     @Getter private final Map<String, String> configs;
 
+    /**
+     * Creates a new command option context.
+     *
+     * The input is split by the pipe character (|) and the first part is the key, the second part is the config.
+     * The config is split by the comma character (,) and each part is split by the equals character (=).
+     * The first part is the key and the second part is the value.
+     *
+     * @param input the input to parse
+     */
     CommandOptionContext(String input) {
         this.configs = Maps.newHashMap();
 

@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 public final class CommandConditions {
     private final Table<Class<?>, String, Condition<?>> conditions;
 
+    /**
+     * Creates a new command conditions instance.
+     */
     CommandConditions() {
         conditions = HashBasedTable.create();
 
@@ -25,10 +28,25 @@ public final class CommandConditions {
         });
     }
 
+    /**
+     * Adds a condition to the manager.
+     *
+     * @param clazz the class of the condition
+     * @param id the id of the condition
+     * @param condition the condition
+     * @param <P> the type of the condition
+     */
     public <P> void addCondition(Class<P> clazz, String id, Condition<P> condition) {
         conditions.put(clazz, id.toLowerCase(), condition);
     }
 
+    /**
+     * Gets a condition from the manager.
+     *
+     * @param clazz the class of the condition
+     * @param id the id of the condition
+     * @return the condition
+     */
     @Nullable
     public Condition<?> getCondition(Class<?> clazz, String id) {
         return conditions.get(clazz, id.toLowerCase());

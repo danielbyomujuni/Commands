@@ -16,6 +16,9 @@ public final class CommandContexts<R extends CommandExecutionContext> {
     private final Map<Class<?>, ContextResolver<?, R>> contextMap;
     private final Map<Class<?>, OptionType> typeMap;
 
+    /**
+     * Creates a new command context manager.
+     */
     CommandContexts() {
         contextMap = Maps.newHashMap();
         typeMap = Maps.newHashMap();
@@ -24,6 +27,9 @@ public final class CommandContexts<R extends CommandExecutionContext> {
         registerMappings();
     }
 
+    /**
+     * Registers a set of contexts for basic types related to Discord.
+     */
     private void registerContexts() {
         registerContext(Integer.class, c -> c.getMapping().getAsInt());
         registerContext(Double.class, c -> c.getMapping().getAsDouble());
@@ -36,6 +42,9 @@ public final class CommandContexts<R extends CommandExecutionContext> {
         registerContext(Member.class, c -> c.getMapping().getAsMember());
     }
 
+    /**
+     * Registers a set of mappings for basic types related to Discord.
+     */
     private void registerMappings() {
         registerMapping(Integer.class, OptionType.INTEGER);
         registerMapping(Double.class, OptionType.NUMBER);
@@ -50,18 +59,44 @@ public final class CommandContexts<R extends CommandExecutionContext> {
         registerMapping(Role.class, OptionType.ROLE);
     }
 
+    /**
+     * Registers a new context for a specific type.
+     *
+     * @param clazz the class to register
+     * @param handler the handler to register
+     * @param <T> the type to register
+     */
     public <T> void registerContext(Class<T> clazz, ContextResolver<T, R> handler) {
         contextMap.put(clazz, handler);
     }
 
+    /**
+     * Registers a new mapping for a specific type.
+     *
+     * @param clazz the class to register
+     * @param type the type to register
+     * @param <T> the type to register
+     */
     public <T> void registerMapping(Class<T> clazz, OptionType type) {
         typeMap.put(clazz, type);
     }
 
+    /**
+     * Gets the context resolver for a specific class.
+     *
+     * @param clazz the class to get the resolver for
+     * @return the context resolver for the specified class
+     */
     public ContextResolver<?, R> getResolver(Class<?> clazz) {
         return contextMap.get(clazz);
     }
 
+    /**
+     * Gets the mapping for a specific class.
+     *
+     * @param clazz the class to get the mapping for
+     * @return the mapping for the specified class
+     */
     public OptionType getMapping(Class<?> clazz) {
         return typeMap.get(clazz);
     }

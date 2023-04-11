@@ -21,8 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-// TODO: If base-level class has permissions attached, so to all contained command methods
 public final class CommandRegistration {
+    /**
+     * Registers registers command aliases for a given base command.
+     *
+     * @param baseCommand The base command to register.
+     */
     static void registerCommandAliases(BaseCommand baseCommand) {
         Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
 
@@ -47,6 +51,11 @@ public final class CommandRegistration {
         }
     }
 
+    /**
+     * Registers subcommands for a given base command.
+     *
+     * @param baseCommand The base command to register.
+     */
     static void registerSubCommands(BaseCommand baseCommand) {
         Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
 
@@ -75,6 +84,12 @@ public final class CommandRegistration {
         }
     }
 
+    /**
+     * Gets the parameters for a given method.
+     *
+     * @param method The method to get the parameters for.
+     * @return A list of command parameters.
+     */
     private static List<CommandParameter> getMethodParameters(Method method) {
         List<CommandParameter> commandParameters = Lists.newArrayList();
         for (Parameter parameter : method.getParameters()) {

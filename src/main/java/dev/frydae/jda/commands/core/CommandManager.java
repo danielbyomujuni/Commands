@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public final class CommandManager {
     private Logger logger;
     private JDA jda;
 
+    /**
+     * Creates a new command manager.
+     */
     private CommandManager() {
         this.annotations = new Annotations();
         this.commandContexts = new CommandContexts<>();
@@ -48,34 +52,49 @@ public final class CommandManager {
         return singleton;
     }
 
-    public static void initialize() {
-        getSingleton();
-    }
-
+    @TestOnly
     public static void resetSingleton() {
         singleton = null;
     }
 
+    /**
+     * @return the command manager's annotations manager
+     */
     public static Annotations getAnnotations() {
         return getSingleton().annotations;
     }
 
+    /**
+     * @return the command manager's command contexts manager
+     */
     public static CommandContexts<CommandExecutionContext> getCommandContexts() {
         return getSingleton().commandContexts;
     }
 
+    /**
+     * @return the command manager's command completions manager
+     */
     public static CommandCompletions getCommandCompletions() {
         return getSingleton().commandCompletions;
     }
 
+    /**
+     * @return the command manager's command conditions manager
+     */
     public static CommandConditions getCommandConditions() {
         return getSingleton().commandConditions;
     }
 
+    /**
+     * @return the command manager's root commands
+     */
     public static List<RegisteredCommand> getRootCommands() {
         return getSingleton().rootCommands;
     }
 
+    /**
+     * @return the command manager's command cache
+     */
     public static Map<String, RegisteredCommand> getCommandCache() {
         return getSingleton().commandCache;
     }

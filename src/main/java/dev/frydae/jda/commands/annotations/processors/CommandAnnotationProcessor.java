@@ -33,8 +33,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({
-    "edu.ship.engr.discordbot.commands.annotations.CommandAlias",
-    "edu.ship.engr.discordbot.commands.annotations.Subcommand"
+    "dev.frydae.jda.commands.annotations.CommandAlias",
+    "dev.frydae.jda.commands.annotations.Subcommand"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
