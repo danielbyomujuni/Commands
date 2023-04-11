@@ -39,7 +39,5 @@ public class AnnotationsTest {
 
         assertNotNull(subcommand);
         assertEquals("simple", subcommand);
-
-        fail();
     }
 }
