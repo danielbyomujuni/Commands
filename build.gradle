@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'dev.frydae'
-version = '1.0-SNAPSHOT'
+version = '0.0.1'
 
 repositories {
     mavenCentral()
@@ -11,6 +12,11 @@ repositories {
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
+    }
+
+    maven {
+        name 'maven-frydae'
+        url 'https://maven.frydae.dev/releases'
     }
 }
 
@@ -47,4 +53,35 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+java {
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release.set 17
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "frydaeRepository"
+            url = "https://maven.frydae.dev/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = "commands"
+            version = project.version
+            from components.java
+        }
+    }
 }
