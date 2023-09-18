@@ -1,10 +1,9 @@
 package dev.frydae.jda.commands.core;
 
 import com.google.common.collect.Lists;
-import dev.frydae.jda.commands.annotations.AutoCompletion;
 import dev.frydae.jda.commands.annotations.CommandAlias;
 import dev.frydae.jda.commands.annotations.CommandPermission;
-import dev.frydae.jda.commands.annotations.Completions;
+import dev.frydae.jda.commands.annotations.Completion;
 import dev.frydae.jda.commands.annotations.Condition;
 import dev.frydae.jda.commands.annotations.Default;
 import dev.frydae.jda.commands.annotations.Description;
@@ -100,8 +99,7 @@ public final class CommandRegistration {
                     .name(CommandManager.getAnnotations().getAnnotationValue(parameter, Name.class))
                     .description(CommandManager.getAnnotations().getAnnotationValue(parameter, Description.class))
                     .defaultValue(CommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null))
-                    .autoCompletion(CommandManager.getAnnotations().getAnnotationValue(parameter, AutoCompletion.class, null))
-                    .completion(CommandManager.getAnnotations().getAnnotationValue(parameter, Completions.class, null))
+                    .completion(CommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null))
                     .condition(CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null))
                     .optional(optional)
                     .build();

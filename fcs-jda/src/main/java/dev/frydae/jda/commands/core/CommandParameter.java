@@ -15,7 +15,6 @@ public final class CommandParameter {
     @Getter @Nullable private final String defaultValue;
     @Getter private final String description;
     @Getter private final String completion;
-    @Getter private final String autoCompletion;
     @Getter private final String condition;
 
     public boolean isRequired() {
@@ -23,11 +22,11 @@ public final class CommandParameter {
     }
 
     public boolean isAutoComplete() {
-        return autoCompletion != null;
+        return completion != null && completion.startsWith("@");
     }
 
     public boolean hasCompletion() {
-        return completion != null || autoCompletion != null;
+        return completion != null;
     }
 
     public boolean hasCondition() {

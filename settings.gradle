@@ -1,2 +1,5 @@
 rootProject.name = 'Commands'
+include 'example-mod'
+include 'example-jda'
+include 'fcs-jda'
 
