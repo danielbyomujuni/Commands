@@ -1,6 +1,6 @@
-package dev.frydae.jda.testing.annotations;
+package dev.frydae.commands.testing.annotations;
 
-import dev.frydae.jda.testing.extensions.CommandTestExtension;
+import dev.frydae.commands.testing.extensions.CommandTestExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;

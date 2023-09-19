@@ -1,6 +1,6 @@
 package dev.frydae.commands;
 
-import dev.frydae.jda.testing.annotations.CommandTest;
+import dev.frydae.commands.testing.annotations.CommandTest;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.junit.jupiter.api.Test;
 

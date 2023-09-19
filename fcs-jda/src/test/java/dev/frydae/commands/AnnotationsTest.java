@@ -2,7 +2,7 @@ package dev.frydae.commands;
 
 import dev.frydae.commands.annotations.CommandAlias;
 import dev.frydae.commands.annotations.Subcommand;
-import dev.frydae.jda.testing.annotations.CommandTest;
+import dev.frydae.commands.testing.annotations.CommandTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
