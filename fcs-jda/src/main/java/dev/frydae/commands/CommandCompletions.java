@@ -44,7 +44,7 @@ public final class CommandCompletions {
                 max = Integer.parseInt(split[1]);
             }
 
-            return IntStream.rangeClosed(min, max).limit(25).mapToObj(i -> new Choice(String.valueOf(i), String.valueOf(i))).collect(Collectors.toList());
+            return IntStream.rangeClosed(min, max).limit(25).mapToObj(i -> new Choice(String.valueOf(i), i)).collect(Collectors.toList());
         });
 
         registerAutoCompletion("range", c -> {
@@ -142,7 +142,7 @@ public final class CommandCompletions {
      */
     public void processAutoComplete(CommandAutoCompleteInteractionEvent event, RegisteredCommand command) {
         String name = event.getFocusedOption().getName();
-        CommandParameter parameter = command.getParameter(name);
+        JDACommandParameter parameter = command.getParameter(name);
 
         String completion = parameter.getCompletion().substring(1);
 

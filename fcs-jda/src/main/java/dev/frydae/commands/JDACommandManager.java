@@ -11,11 +11,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -181,11 +179,11 @@ public final class JDACommandManager extends CommandManager {
     }
 
     @NotNull
-    private static OptionData getOptionData(CommandParameter parameter) {
+    private static OptionData getOptionData(JDACommandParameter parameter) {
         CommandContexts<CommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
         CommandCompletions commandCompletions = JDACommandManager.getCommandCompletions();
 
-        OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), parameter.isRequired());
+        OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), !parameter.isOptional());
 
         if (parameter.hasCompletion()) {
             if (parameter.isAutoComplete()) {

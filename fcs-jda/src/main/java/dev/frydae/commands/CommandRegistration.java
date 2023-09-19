@@ -41,7 +41,7 @@ public final class CommandRegistration {
 
                 boolean global = method.isAnnotationPresent(GlobalCommand.class);
 
-                List<CommandParameter> commandParameters = getMethodParameters(method);
+                List<JDACommandParameter> commandParameters = getMethodParameters(method);
 
                 RegisteredCommand command = new RegisteredCommand(baseCommand, null, cmdClass, method, alias, description, commandParameters, global, mergedPerms);
 
@@ -73,7 +73,7 @@ public final class CommandRegistration {
                     String subDesc = JDACommandManager.getAnnotations().getAnnotationValue(method, Description.class);
                     Permission[] subPerms = JDACommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, null);
 
-                    List<CommandParameter> subParams = getMethodParameters(method);
+                    List<JDACommandParameter> subParams = getMethodParameters(method);
 
                     parent.addSubcommand(new RegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), method, subName, subDesc, subParams, global, subPerms));
                 }
@@ -89,20 +89,20 @@ public final class CommandRegistration {
      * @param method The method to get the parameters for.
      * @return A list of command parameters.
      */
-    private static List<CommandParameter> getMethodParameters(Method method) {
-        List<CommandParameter> commandParameters = Lists.newArrayList();
+    private static List<JDACommandParameter> getMethodParameters(Method method) {
+        List<JDACommandParameter> commandParameters = Lists.newArrayList();
         for (Parameter parameter : method.getParameters()) {
             boolean optional = parameter.isAnnotationPresent(Optional.class) || parameter.isAnnotationPresent(Default.class);
 
-            CommandParameter commandParameter = CommandParameter.builder()
-                    .parameter(parameter)
-                    .name(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Name.class))
-                    .description(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Description.class))
-                    .defaultValue(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null))
-                    .completion(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null))
-                    .condition(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null))
-                    .optional(optional)
-                    .build();
+            JDACommandParameter commandParameter = new JDACommandParameter();
+
+            commandParameter.setParameter(parameter);
+            commandParameter.setOptional(optional);
+            commandParameter.setName(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Name.class));
+            commandParameter.setDescription(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Description.class));
+            commandParameter.setDefaultValue(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null));
+            commandParameter.setCompletion(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null));
+            commandParameter.setCondition(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null));
 
             commandParameters.add(commandParameter);
         }

@@ -17,7 +17,7 @@ public final class RegisteredCommand {
     @Getter private final Method method;
     @Getter @NotNull private final String name;
     @Getter @NotNull private final String description;
-    @Getter private final List<CommandParameter> parameters;
+    @Getter private final List<JDACommandParameter> parameters;
     @Getter private final boolean global;
     @Getter private final Permission[] permissions;
     @Getter private List<RegisteredCommand> subcommands = Lists.newArrayList();
@@ -37,12 +37,12 @@ public final class RegisteredCommand {
     }
 
     /**
-     * Finds a {@link CommandParameter} by name.
+     * Finds a {@link JDACommandParameter} by name.
      *
      * @param name the name of the parameter
-     * @return a {@link CommandParameter} if found, null otherwise
+     * @return a {@link JDACommandParameter} if found, null otherwise
      */
-    public CommandParameter getParameter(String name) {
+    public JDACommandParameter getParameter(String name) {
         return parameters.stream()
                 .filter(p -> p.getName() != null)
                 .filter(p -> p.getName().equalsIgnoreCase(name))

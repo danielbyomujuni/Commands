@@ -64,7 +64,7 @@ public final class CommandHandler {
     private static Object[] resolveArgs(SlashCommandInteractionEvent event, RegisteredCommand command) throws IllegalCommandException {
         List<Object> objects = Lists.newArrayList();
 
-        for (CommandParameter parameter : command.getParameters()) {
+        for (JDACommandParameter parameter : command.getParameters()) {
             OptionMapping option = event.getOption(parameter.getName());
 
             if (option == null) {
@@ -86,13 +86,13 @@ public final class CommandHandler {
      *
      * @param event the {@link SlashCommandInteractionEvent} to process
      * @param command the {@link RegisteredCommand} to process
-     * @param parameter the {@link CommandParameter} to process
+     * @param parameter the {@link JDACommandParameter} to process
      * @param option the {@link OptionMapping} to process
      * @return the resolved parameter
      * @throws IllegalCommandException if something goes wrong
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static Object resolveParameter(SlashCommandInteractionEvent event, RegisteredCommand command, CommandParameter parameter, OptionMapping option) throws IllegalCommandException {
+    private static Object resolveParameter(SlashCommandInteractionEvent event, RegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         CommandExecutionContext context = new CommandExecutionContext(command, parameter, option, event);
 
         CommandContexts.ContextResolver<?, CommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
