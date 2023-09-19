@@ -43,7 +43,7 @@ public final class CommandRegistration {
 
                 JDACommandParameter[] commandParameters = getMethodParameters(method);
 
-                RegisteredCommand command = new RegisteredCommand(baseCommand, null, cmdClass, method, alias, description, commandParameters, global, mergedPerms);
+                JDARegisteredCommand command = new JDARegisteredCommand(baseCommand, null, cmdClass, method, alias, description, commandParameters, global, mergedPerms);
 
                 JDACommandManager.getRootCommands().add(command);
             }
@@ -65,7 +65,7 @@ public final class CommandRegistration {
 
             boolean global = cmdClass.isAnnotationPresent(GlobalCommand.class);
 
-            RegisteredCommand parent = new RegisteredCommand(baseCommand, null, cmdClass, null, alias, description, null, global, permissions);
+            JDARegisteredCommand parent = new JDARegisteredCommand(baseCommand, null, cmdClass, null, alias, description, null, global, permissions);
 
             for (Method method : cmdClass.getMethods()) {
                 if (method.isAnnotationPresent(Subcommand.class) && !method.isAnnotationPresent(Disabled.class)) {
@@ -75,7 +75,7 @@ public final class CommandRegistration {
 
                     JDACommandParameter[] subParams = getMethodParameters(method);
 
-                    parent.addSubcommand(new RegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), method, subName, subDesc, subParams, global, subPerms));
+                    parent.addSubcommand(new JDARegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), method, subName, subDesc, subParams, global, subPerms));
                 }
             }
 

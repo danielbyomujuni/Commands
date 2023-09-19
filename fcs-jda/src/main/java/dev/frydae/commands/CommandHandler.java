@@ -15,7 +15,7 @@ public final class CommandHandler {
      * @param event the {@link SlashCommandInteractionEvent} to process
      */
     public static void processSlashCommand(SlashCommandInteractionEvent event) {
-        RegisteredCommand command = JDACommandManager.findRegisteredCommand(event.getFullCommandName());
+        JDARegisteredCommand command = JDACommandManager.findRegisteredCommand(event.getFullCommandName());
 
         // This is so beyond impossible, that I cannot begin to fathom what would need to occur for this to be null.
         // The only thing that I can imagine that could cause the member to be null, is that the universe is indeed
@@ -54,14 +54,14 @@ public final class CommandHandler {
     }
 
     /**
-     * Resolves the arguments for a {@link RegisteredCommand}.
+     * Resolves the arguments for a {@link JDARegisteredCommand}.
      *
      * @param event the {@link SlashCommandInteractionEvent} to process
-     * @param command the {@link RegisteredCommand} to process
+     * @param command the {@link JDARegisteredCommand} to process
      * @return the resolved arguments
      * @throws IllegalCommandException if something goes wrong
      */
-    private static Object[] resolveArgs(SlashCommandInteractionEvent event, RegisteredCommand command) throws IllegalCommandException {
+    private static Object[] resolveArgs(SlashCommandInteractionEvent event, JDARegisteredCommand command) throws IllegalCommandException {
         List<Object> objects = Lists.newArrayList();
 
         for (JDACommandParameter parameter : command.getParameters()) {
@@ -82,17 +82,17 @@ public final class CommandHandler {
     }
 
     /**
-     * Resolves a parameter for a {@link RegisteredCommand}.
+     * Resolves a parameter for a {@link JDARegisteredCommand}.
      *
      * @param event the {@link SlashCommandInteractionEvent} to process
-     * @param command the {@link RegisteredCommand} to process
+     * @param command the {@link JDARegisteredCommand} to process
      * @param parameter the {@link JDACommandParameter} to process
      * @param option the {@link OptionMapping} to process
      * @return the resolved parameter
      * @throws IllegalCommandException if something goes wrong
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static Object resolveParameter(SlashCommandInteractionEvent event, RegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
+    private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         CommandExecutionContext context = new CommandExecutionContext(command, parameter, option, event);
 
         CommandContexts.ContextResolver<?, CommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());

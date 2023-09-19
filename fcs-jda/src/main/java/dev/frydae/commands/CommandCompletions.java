@@ -138,9 +138,9 @@ public final class CommandCompletions {
      * Processes an auto complete event.
      *
      * @param event The {@link CommandAutoCompleteInteractionEvent} to be processed
-     * @param command the found {@link RegisteredCommand}
+     * @param command the found {@link JDARegisteredCommand}
      */
-    public void processAutoComplete(CommandAutoCompleteInteractionEvent event, RegisteredCommand command) {
+    public void processAutoComplete(CommandAutoCompleteInteractionEvent event, JDARegisteredCommand command) {
         String name = event.getFocusedOption().getName();
         JDACommandParameter parameter = command.getParameter(name);
 

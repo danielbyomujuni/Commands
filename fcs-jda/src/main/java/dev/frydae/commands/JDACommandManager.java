@@ -24,8 +24,8 @@ public final class JDACommandManager extends CommandManager {
     private final CommandContexts<CommandExecutionContext> commandContexts;
     private final CommandCompletions commandCompletions;
     private final CommandConditions commandConditions;
-    private final List<RegisteredCommand> rootCommands;
-    private final Map<String, RegisteredCommand> commandCache;
+    private final List<JDARegisteredCommand> rootCommands;
+    private final Map<String, JDARegisteredCommand> commandCache;
     private static JDA jda;
 
     /**
@@ -76,14 +76,14 @@ public final class JDACommandManager extends CommandManager {
     /**
      * @return the command manager's root commands
      */
-    public static List<RegisteredCommand> getRootCommands() {
+    public static List<JDARegisteredCommand> getRootCommands() {
         return getSingleton().rootCommands;
     }
 
     /**
      * @return the command manager's command cache
      */
-    public static Map<String, RegisteredCommand> getCommandCache() {
+    public static Map<String, JDARegisteredCommand> getCommandCache() {
         return getSingleton().commandCache;
     }
 
@@ -96,12 +96,12 @@ public final class JDACommandManager extends CommandManager {
     }
 
     /**
-     * Searches for a matching {@link RegisteredCommand} and delegates to {@link CommandCompletions#processAutoComplete}.
+     * Searches for a matching {@link JDARegisteredCommand} and delegates to {@link CommandCompletions#processAutoComplete}.
      *
      * @param event the {@link CommandAutoCompleteInteractionEvent}
      */
     public static void processCommandAutoComplete(CommandAutoCompleteInteractionEvent event) {
-        RegisteredCommand command = findRegisteredCommand(event.getFullCommandName());
+        JDARegisteredCommand command = findRegisteredCommand(event.getFullCommandName());
 
         if (command != null) {
             getCommandCompletions().processAutoComplete(event, command);
@@ -115,15 +115,15 @@ public final class JDACommandManager extends CommandManager {
      * If one is then found, add it to {@link JDACommandManager#commandCache}
      *
      * @param fullCommandName the full discord command name
-     * @return a {@link RegisteredCommand} if found, null otherwise
+     * @return a {@link JDARegisteredCommand} if found, null otherwise
      */
     @Nullable
-    static RegisteredCommand findRegisteredCommand(String fullCommandName) {
+    static JDARegisteredCommand findRegisteredCommand(String fullCommandName) {
         if (getCommandCache().containsKey(fullCommandName)) {
             return getCommandCache().get(fullCommandName);
         }
 
-        for (RegisteredCommand registeredCommand : getRootCommands()) {
+        for (JDARegisteredCommand registeredCommand : getRootCommands()) {
             if (registeredCommand.getFullName().equalsIgnoreCase(fullCommandName)) {
                 getCommandCache().put(fullCommandName, registeredCommand);
 
@@ -131,7 +131,7 @@ public final class JDACommandManager extends CommandManager {
             }
 
             if (registeredCommand.hasSubcommands()) {
-                for (RegisteredCommand subcommand : registeredCommand.getSubcommands()) {
+                for (JDARegisteredCommand subcommand : registeredCommand.getSubcommands()) {
                     if (subcommand.getFullName().equalsIgnoreCase(fullCommandName)) {
                         getCommandCache().put(fullCommandName, subcommand);
 
@@ -150,7 +150,7 @@ public final class JDACommandManager extends CommandManager {
     public static void upsertCommands() {
         CommandListUpdateAction commandListUpdateAction = getJDA().updateCommands();
 
-        for (RegisteredCommand command : getRootCommands()) {
+        for (JDARegisteredCommand command : getRootCommands()) {
             SlashCommandData commandData = Commands.slash(command.getName(), command.getDescription());
 
             if (command.getPermissions() != null) {
@@ -160,7 +160,7 @@ public final class JDACommandManager extends CommandManager {
             if (!command.hasSubcommands()) {
                 Arrays.stream(command.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
             } else {
-                for (RegisteredCommand subcommand : command.getSubcommands()) {
+                for (JDARegisteredCommand subcommand : command.getSubcommands()) {
                     SubcommandData subcommandData = new SubcommandData(subcommand.getName(), subcommand.getDescription());
 
                     Arrays.stream(subcommand.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
