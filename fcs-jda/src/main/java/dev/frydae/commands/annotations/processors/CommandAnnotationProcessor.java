@@ -30,10 +30,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({
-    "dev.frydae.jda.commands.annotations.CommandAlias",
-    "dev.frydae.jda.commands.annotations.Subcommand"
+    "dev.frydae.commands.annotations.CommandAlias",
+    "dev.frydae.commands.annotations.Subcommand"
 })
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class CommandAnnotationProcessor extends AbstractProcessor {
 
