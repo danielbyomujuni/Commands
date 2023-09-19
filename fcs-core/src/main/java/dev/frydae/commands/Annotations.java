@@ -1,6 +1,5 @@
 package dev.frydae.commands;
 
-
 import com.google.common.collect.Maps;
 import org.jetbrains.annotations.Nullable;
 

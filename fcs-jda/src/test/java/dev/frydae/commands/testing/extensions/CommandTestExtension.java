@@ -1,6 +1,6 @@
 package dev.frydae.commands.testing.extensions;
 
-import dev.frydae.commands.CommandManager;
+import dev.frydae.commands.JDACommandManager;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -12,6 +12,6 @@ public class CommandTestExtension implements BeforeEachCallback {
      */
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        CommandManager.resetSingleton();
+        JDACommandManager.resetSingleton();
     }
 }

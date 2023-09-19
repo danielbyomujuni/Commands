@@ -1,7 +1,7 @@
 package dev.frydae.bot.listeners;
 
 import dev.frydae.commands.CommandHandler;
-import dev.frydae.commands.CommandManager;
+import dev.frydae.commands.JDACommandManager;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -15,7 +15,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
-        CommandManager.processCommandAutoComplete(event);
+        JDACommandManager.processCommandAutoComplete(event);
     }
 }
 

@@ -12,7 +12,7 @@ public abstract class BaseCommand {
     private SlashCommandInteractionEvent event;
 
     public BaseCommand() {
-        CommandManager.registerCommand(this);
+        JDACommandManager.registerCommand(this);
     }
 
     void setSlashCommandEvent(SlashCommandInteractionEvent event) {

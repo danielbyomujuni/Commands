@@ -18,7 +18,7 @@ public class AnnotationsTest {
 
     @BeforeEach
     public void setup() {
-        annotations = CommandManager.getAnnotations();
+        annotations = JDACommandManager.getAnnotations();
     }
 
     @Test

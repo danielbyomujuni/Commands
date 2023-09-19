@@ -149,7 +149,7 @@ public final class CommandCompletions {
         Function<CommandAutoCompletionContext, List<Choice>> autoResolver = getAutoResolver(completion.split("\\|")[0]);
 
         if (autoResolver == null) {
-            CommandManager.getLogger().error("No AutoResolver found for: (" + completion + ")");
+            JDACommandManager.getLogger().error("No AutoResolver found for: (" + completion + ")");
 
             return;
         }

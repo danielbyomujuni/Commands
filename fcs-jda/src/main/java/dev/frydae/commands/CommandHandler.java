@@ -15,7 +15,7 @@ public final class CommandHandler {
      * @param event the {@link SlashCommandInteractionEvent} to process
      */
     public static void processSlashCommand(SlashCommandInteractionEvent event) {
-        RegisteredCommand command = CommandManager.findRegisteredCommand(event.getFullCommandName());
+        RegisteredCommand command = JDACommandManager.findRegisteredCommand(event.getFullCommandName());
 
         // This is so beyond impossible, that I cannot begin to fathom what would need to occur for this to be null.
         // The only thing that I can imagine that could cause the member to be null, is that the universe is indeed
@@ -47,7 +47,7 @@ public final class CommandHandler {
 
             command.getInstance().tearDown();
         } catch (IllegalAccessException | InvocationTargetException e) {
-            CommandManager.getLogger().error(ExceptionUtils.getStackTrace(e));
+            JDACommandManager.getLogger().error(ExceptionUtils.getStackTrace(e));
         } catch (IllegalCommandException e) {
             event.getInteraction().reply(e.getMessage()).setEphemeral(true).queue();
         }
@@ -95,7 +95,7 @@ public final class CommandHandler {
     private static Object resolveParameter(SlashCommandInteractionEvent event, RegisteredCommand command, CommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         CommandExecutionContext context = new CommandExecutionContext(command, parameter, option, event);
 
-        CommandContexts.ContextResolver<?, CommandExecutionContext> resolver = CommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
+        CommandContexts.ContextResolver<?, CommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
 
         if (resolver == null) {
             return null;
@@ -105,7 +105,7 @@ public final class CommandHandler {
             if (parameter.hasCondition()) {
                 CommandOptionContext optionContext = new CommandOptionContext(parameter.getCondition());
 
-                CommandConditions.Condition condition = CommandManager.getCommandConditions().getCondition(parameter.getParameter().getType(), optionContext.getKey());
+                CommandConditions.Condition condition = JDACommandManager.getCommandConditions().getCondition(parameter.getParameter().getType(), optionContext.getKey());
 
                 if (condition != null) {
                     condition.validate(optionContext, context, resolve);

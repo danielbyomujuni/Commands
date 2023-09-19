@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -19,24 +20,19 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.Map;
 
-public final class CommandManager {
-    private static CommandManager singleton;
-
-    private final Annotations annotations;
+public final class JDACommandManager extends CommandManager {
+    private static JDACommandManager singleton;
     private final CommandContexts<CommandExecutionContext> commandContexts;
     private final CommandCompletions commandCompletions;
     private final CommandConditions commandConditions;
     private final List<RegisteredCommand> rootCommands;
     private final Map<String, RegisteredCommand> commandCache;
-
-    private Logger logger;
-    private JDA jda;
+    private static JDA jda;
 
     /**
      * Creates a new command manager.
      */
-    private CommandManager() {
-        this.annotations = new Annotations();
+    private JDACommandManager() {
         this.commandContexts = new CommandContexts<>();
         this.commandCompletions = new CommandCompletions();
         this.commandConditions = new CommandConditions();
@@ -44,9 +40,9 @@ public final class CommandManager {
         this.commandCache = Maps.newHashMap();
     }
 
-    private static CommandManager getSingleton() {
+    private static JDACommandManager getSingleton() {
         if (singleton == null) {
-            singleton = new CommandManager();
+            singleton = new JDACommandManager();
         }
 
         return singleton;
@@ -55,13 +51,6 @@ public final class CommandManager {
     @TestOnly
     public static void resetSingleton() {
         singleton = null;
-    }
-
-    /**
-     * @return the command manager's annotations manager
-     */
-    public static Annotations getAnnotations() {
-        return getSingleton().annotations;
     }
 
     /**
@@ -99,20 +88,12 @@ public final class CommandManager {
         return getSingleton().commandCache;
     }
 
-    public static Logger getLogger() {
-        return getSingleton().logger;
-    }
-
-    public static void setLogger(Logger logger) {
-        getSingleton().logger = logger;
-    }
-
     public static JDA getJDA() {
-        return getSingleton().jda;
+        return JDACommandManager.jda;
     }
 
     public static void setJDA(JDA jda) {
-        getSingleton().jda = jda;
+        JDACommandManager.jda = jda;
     }
 
     /**
@@ -129,10 +110,10 @@ public final class CommandManager {
     }
 
     /**
-     * Searches through the {@link CommandManager#commandCache} for the command.
+     * Searches through the {@link JDACommandManager#commandCache} for the command.
      * </p>
      * If one isn't found, recursively search through all registered commands for one.
-     * If one is then found, add it to {@link CommandManager#commandCache}
+     * If one is then found, add it to {@link JDACommandManager#commandCache}
      *
      * @param fullCommandName the full discord command name
      * @return a {@link RegisteredCommand} if found, null otherwise
@@ -178,12 +159,12 @@ public final class CommandManager {
             }
 
             if (!command.hasSubcommands()) {
-                command.getParameters().stream().map(CommandManager::getOptionData).forEachOrdered(commandData::addOptions);
+                command.getParameters().stream().map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
             } else {
                 for (RegisteredCommand subcommand : command.getSubcommands()) {
                     SubcommandData subcommandData = new SubcommandData(subcommand.getName(), subcommand.getDescription());
 
-                    subcommand.getParameters().stream().map(CommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
+                    subcommand.getParameters().stream().map(JDACommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
 
                     commandData.addSubcommands(subcommandData);
                 }
@@ -201,8 +182,8 @@ public final class CommandManager {
 
     @NotNull
     private static OptionData getOptionData(CommandParameter parameter) {
-        CommandContexts<CommandExecutionContext> commandContexts = CommandManager.getCommandContexts();
-        CommandCompletions commandCompletions = CommandManager.getCommandCompletions();
+        CommandContexts<CommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        CommandCompletions commandCompletions = JDACommandManager.getCommandCompletions();
 
         OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), parameter.isRequired());
 

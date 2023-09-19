@@ -29,13 +29,13 @@ public final class CommandRegistration {
     static void registerCommandAliases(BaseCommand baseCommand) {
         Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
 
-        Permission[] classPerms = CommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, new Permission[]{});
+        Permission[] classPerms = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, new Permission[]{});
 
         for (Method method : cmdClass.getMethods()) {
             if (method.isAnnotationPresent(CommandAlias.class) && !method.isAnnotationPresent(Disabled.class)) {
-                String alias = CommandManager.getAnnotations().getAnnotationValue(method, CommandAlias.class);
-                String description = CommandManager.getAnnotations().getAnnotationValue(method, Description.class);
-                Permission[] methodPerms = CommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, new Permission[]{});
+                String alias = JDACommandManager.getAnnotations().getAnnotationValue(method, CommandAlias.class);
+                String description = JDACommandManager.getAnnotations().getAnnotationValue(method, Description.class);
+                Permission[] methodPerms = JDACommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, new Permission[]{});
 
                 Permission[] mergedPerms = Stream.concat(Arrays.stream(classPerms), Arrays.stream(methodPerms)).distinct().toArray(Permission[]::new);
 
@@ -45,7 +45,7 @@ public final class CommandRegistration {
 
                 RegisteredCommand command = new RegisteredCommand(baseCommand, null, cmdClass, method, alias, description, commandParameters, global, mergedPerms);
 
-                CommandManager.getRootCommands().add(command);
+                JDACommandManager.getRootCommands().add(command);
             }
         }
     }
@@ -59,9 +59,9 @@ public final class CommandRegistration {
         Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
 
         if (cmdClass.isAnnotationPresent(CommandAlias.class) && !cmdClass.isAnnotationPresent(Disabled.class)) {
-            String alias = CommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandAlias.class);
-            String description = CommandManager.getAnnotations().getAnnotationValue(cmdClass, Description.class);
-            Permission[] permissions = CommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, null);
+            String alias = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandAlias.class);
+            String description = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, Description.class);
+            Permission[] permissions = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, null);
 
             boolean global = cmdClass.isAnnotationPresent(GlobalCommand.class);
 
@@ -69,9 +69,9 @@ public final class CommandRegistration {
 
             for (Method method : cmdClass.getMethods()) {
                 if (method.isAnnotationPresent(Subcommand.class) && !method.isAnnotationPresent(Disabled.class)) {
-                    String subName = CommandManager.getAnnotations().getAnnotationValue(method, Subcommand.class);
-                    String subDesc = CommandManager.getAnnotations().getAnnotationValue(method, Description.class);
-                    Permission[] subPerms = CommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, null);
+                    String subName = JDACommandManager.getAnnotations().getAnnotationValue(method, Subcommand.class);
+                    String subDesc = JDACommandManager.getAnnotations().getAnnotationValue(method, Description.class);
+                    Permission[] subPerms = JDACommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, null);
 
                     List<CommandParameter> subParams = getMethodParameters(method);
 
@@ -79,7 +79,7 @@ public final class CommandRegistration {
                 }
             }
 
-            CommandManager.getRootCommands().add(parent);
+            JDACommandManager.getRootCommands().add(parent);
         }
     }
 
@@ -96,11 +96,11 @@ public final class CommandRegistration {
 
             CommandParameter commandParameter = CommandParameter.builder()
                     .parameter(parameter)
-                    .name(CommandManager.getAnnotations().getAnnotationValue(parameter, Name.class))
-                    .description(CommandManager.getAnnotations().getAnnotationValue(parameter, Description.class))
-                    .defaultValue(CommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null))
-                    .completion(CommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null))
-                    .condition(CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null))
+                    .name(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Name.class))
+                    .description(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Description.class))
+                    .defaultValue(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null))
+                    .completion(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null))
+                    .condition(JDACommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null))
                     .optional(optional)
                     .build();
 
