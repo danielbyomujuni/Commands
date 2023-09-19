@@ -1,0 +1,22 @@
+task wrapper(type: Wrapper){
+    gradleVersion = '8.3'
+}
+
+java {
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release.set 17
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        name "maven-frydae"
+        url "https://maven.frydae.dev/releases"
+    }
+}

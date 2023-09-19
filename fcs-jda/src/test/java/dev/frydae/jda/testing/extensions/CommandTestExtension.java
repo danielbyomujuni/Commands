@@ -1,6 +1,6 @@
 package dev.frydae.jda.testing.extensions;
 
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.CommandManager;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 

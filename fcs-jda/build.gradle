@@ -1,11 +1,13 @@
 plugins {
     id 'java'
-    id 'maven-publish'
     id "io.freefair.lombok" version "8.3"
 }
 
 group = 'dev.frydae'
-version = '0.0.2'
+version = '0.0.1-beta.1'
+
+apply from: "$rootDir/common.gradle"
+apply from: "$rootDir/publishing.gradle"
 
 repositories {
     mavenCentral()
@@ -48,35 +50,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-java {
-    withSourcesJar()
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-    options.release.set 17
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "frydaeRepository"
-            url = "https://maven.frydae.dev/releases"
-            credentials(PasswordCredentials)
-            authentication {
-                basic(BasicAuthentication)
-            }
-        }
-    }
-
-    publications {
-        maven(MavenPublication) {
-            groupId = project.group
-            artifactId = "commands"
-            version = project.version
-            from components.java
-        }
-    }
 }

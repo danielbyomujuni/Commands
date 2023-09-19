@@ -1,7 +1,7 @@
 package dev.frydae.bot.listeners;
 
-import dev.frydae.jda.commands.core.CommandHandler;
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.CommandHandler;
+import dev.frydae.commands.CommandManager;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

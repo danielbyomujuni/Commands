@@ -1,6 +1,6 @@
 package dev.frydae.bot.commands;
 
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.CommandManager;
 
 public class Commands {
     /**

@@ -4,7 +4,7 @@ import dev.frydae.bot.commands.Commands;
 import dev.frydae.bot.listeners.CommandListener;
 import dev.frydae.bot.utils.CaselessHashMap;
 import dev.frydae.bot.utils.GuildUtil;
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.CommandManager;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
