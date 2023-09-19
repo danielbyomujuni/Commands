@@ -199,7 +199,7 @@ public final class JDACommandManager extends CommandManager {
         return optionData;
     }
 
-    public static void registerCommand(BaseCommand baseCommand) {
+    public static void registerCommand(JDABaseCommand baseCommand) {
         CommandRegistration.registerCommandAliases(baseCommand);
         CommandRegistration.registerSubCommands(baseCommand);
     }

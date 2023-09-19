@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public final class RegisteredCommand {
-    @Getter @NotNull private final BaseCommand instance;
+    @Getter @NotNull private final JDABaseCommand instance;
     private final RegisteredCommand parent;
     @Getter @NotNull private final Class<?> baseClass;
     @Getter private final Method method;

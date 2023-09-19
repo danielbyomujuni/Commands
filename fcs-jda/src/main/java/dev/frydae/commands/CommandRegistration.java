@@ -26,8 +26,8 @@ public final class CommandRegistration {
      *
      * @param baseCommand The base command to register.
      */
-    static void registerCommandAliases(BaseCommand baseCommand) {
-        Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
+    static void registerCommandAliases(JDABaseCommand baseCommand) {
+        Class<? extends JDABaseCommand> cmdClass = baseCommand.getClass();
 
         Permission[] classPerms = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, new Permission[]{});
 
@@ -55,8 +55,8 @@ public final class CommandRegistration {
      *
      * @param baseCommand The base command to register.
      */
-    static void registerSubCommands(BaseCommand baseCommand) {
-        Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
+    static void registerSubCommands(JDABaseCommand baseCommand) {
+        Class<? extends JDABaseCommand> cmdClass = baseCommand.getClass();
 
         if (cmdClass.isAnnotationPresent(CommandAlias.class) && !cmdClass.isAnnotationPresent(Disabled.class)) {
             String alias = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandAlias.class);

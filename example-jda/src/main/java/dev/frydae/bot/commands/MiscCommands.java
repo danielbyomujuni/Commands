@@ -2,10 +2,10 @@ package dev.frydae.bot.commands;
 
 import dev.frydae.bot.utils.GuildUtil;
 import dev.frydae.commands.annotations.*;
-import dev.frydae.commands.BaseCommand;
+import dev.frydae.commands.JDABaseCommand;
 import net.dv8tion.jda.api.Permission;
 
-public class MiscCommands extends BaseCommand {
+public class MiscCommands extends JDABaseCommand {
     @CommandAlias("ping")
     @Description("Pong!")
     @GlobalCommand

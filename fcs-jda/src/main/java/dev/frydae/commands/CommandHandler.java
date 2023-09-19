@@ -41,7 +41,7 @@ public final class CommandHandler {
                 }
             }
 
-            command.getInstance().setSlashCommandEvent(event);
+            command.getInstance().setEvent(event);
 
             command.getMethod().invoke(command.getInstance(), resolveArgs(event, command));
 

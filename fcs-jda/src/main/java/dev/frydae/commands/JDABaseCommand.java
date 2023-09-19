@@ -1,5 +1,7 @@
 package dev.frydae.commands;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -8,23 +10,16 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
 
-public abstract class BaseCommand {
-    private SlashCommandInteractionEvent event;
+public class JDABaseCommand extends BaseCommand {
+    @Getter @Setter private SlashCommandInteractionEvent event;
 
-    public BaseCommand() {
+    @Override
+    public void registerCommand() {
         JDACommandManager.registerCommand(this);
-    }
-
-    void setSlashCommandEvent(SlashCommandInteractionEvent event) {
-        this.event = event;
     }
 
     void tearDown() {
         this.event = null;
-    }
-
-    public SlashCommandInteractionEvent getEvent() {
-        return event;
     }
 
     public Member getSender() {
