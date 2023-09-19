@@ -66,7 +66,7 @@ public final class CommandCompletions {
                     .mapToObj(String::valueOf)
                     .filter(s -> s.startsWith(c.getCurrent()))
                     .limit(25)
-                    .map(i -> new Choice(i, i))
+                    .map(i -> new Choice(i, Integer.parseInt(i)))
                     .collect(Collectors.toList());
         });
     }
@@ -144,18 +144,20 @@ public final class CommandCompletions {
         String name = event.getFocusedOption().getName();
         CommandParameter parameter = command.getParameter(name);
 
-        if (!parameter.hasCompletion()) {
-            return;
-        }
+        String completion = parameter.getCompletion().substring(1);
 
-        Function<CommandAutoCompletionContext, List<Choice>> autoResolver = getAutoResolver(parameter.getAutoCompletion().split("\\|")[0]);
+        Function<CommandAutoCompletionContext, List<Choice>> autoResolver = getAutoResolver(completion.split("\\|")[0]);
 
         if (autoResolver == null) {
+            CommandManager.getLogger().error("No AutoResolver found for: (" + completion + ")");
+
             return;
         }
 
-        CommandAutoCompletionContext context = new CommandAutoCompletionContext(event, parameter.getAutoCompletion(), event.getFocusedOption().getValue());
+        CommandAutoCompletionContext context = new CommandAutoCompletionContext(event, completion, event.getFocusedOption().getValue());
 
-        event.replyChoices(autoResolver.apply(context)).queue();
+        List<Choice> apply = autoResolver.apply(context);
+
+        event.replyChoices(apply).queue();
     }
 }
