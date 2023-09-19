@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.Permission;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public final class RegisteredCommand {
     @Getter private final Method method;
     @Getter @NotNull private final String name;
     @Getter @NotNull private final String description;
-    @Getter private final List<JDACommandParameter> parameters;
+    @Getter private final JDACommandParameter[] parameters;
     @Getter private final boolean global;
     @Getter private final Permission[] permissions;
     @Getter private List<RegisteredCommand> subcommands = Lists.newArrayList();
@@ -43,7 +44,7 @@ public final class RegisteredCommand {
      * @return a {@link JDACommandParameter} if found, null otherwise
      */
     public JDACommandParameter getParameter(String name) {
-        return parameters.stream()
+        return Arrays.stream(parameters)
                 .filter(p -> p.getName() != null)
                 .filter(p -> p.getName().equalsIgnoreCase(name))
                 .findFirst().orElse(null);

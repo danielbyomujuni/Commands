@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -157,12 +158,12 @@ public final class JDACommandManager extends CommandManager {
             }
 
             if (!command.hasSubcommands()) {
-                command.getParameters().stream().map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
+                Arrays.stream(command.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
             } else {
                 for (RegisteredCommand subcommand : command.getSubcommands()) {
                     SubcommandData subcommandData = new SubcommandData(subcommand.getName(), subcommand.getDescription());
 
-                    subcommand.getParameters().stream().map(JDACommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
+                    Arrays.stream(subcommand.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
 
                     commandData.addSubcommands(subcommandData);
                 }
