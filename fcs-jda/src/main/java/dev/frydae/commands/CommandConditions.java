@@ -59,6 +59,6 @@ public final class CommandConditions {
      */
     @FunctionalInterface
     public interface Condition<T> {
-        void validate(CommandOptionContext context, CommandExecutionContext executionContext, T value) throws IllegalCommandException;
+        void validate(CommandOptionContext context, JDACommandExecutionContext executionContext, T value) throws IllegalCommandException;
     }
 }

@@ -13,14 +13,14 @@ import static org.mockito.Mockito.when;
 public class CommandContextsTest {
     @Test
     public void testStructure() throws IllegalCommandException {
-        CommandContexts<CommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        CommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
 
         commandContexts.registerContext(TestStructure.class, c -> new TestStructure(c.getMapping().getAsString()));
 
         OptionMapping mapping = mock(OptionMapping.class);
         when(mapping.getAsString()).thenReturn("fish");
 
-        CommandExecutionContext context = new CommandExecutionContext(null, null, mapping, null);
+        JDACommandExecutionContext context = new JDACommandExecutionContext(null, null, mapping, null);
 
         Object resolve = commandContexts.getResolver(TestStructure.class).resolve(context);
 
@@ -32,12 +32,12 @@ public class CommandContextsTest {
 
     @Test
     public void testInteger() throws IllegalCommandException {
-        CommandContexts<CommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        CommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
 
         OptionMapping mapping = mock(OptionMapping.class);
         when(mapping.getAsInt()).thenReturn(12);
 
-        CommandExecutionContext context = new CommandExecutionContext(null, null, mapping, null);
+        JDACommandExecutionContext context = new JDACommandExecutionContext(null, null, mapping, null);
 
         Object resolve = commandContexts.getResolver(Integer.class).resolve(context);
 

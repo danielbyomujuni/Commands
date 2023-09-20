@@ -21,7 +21,7 @@ import java.util.Map;
 
 public final class JDACommandManager extends CommandManager {
     private static JDACommandManager singleton;
-    private final CommandContexts<CommandExecutionContext> commandContexts;
+    private final CommandContexts<JDACommandExecutionContext> commandContexts;
     private final CommandCompletions commandCompletions;
     private final CommandConditions commandConditions;
     private final List<JDARegisteredCommand> rootCommands;
@@ -55,7 +55,7 @@ public final class JDACommandManager extends CommandManager {
     /**
      * @return the command manager's command contexts manager
      */
-    public static CommandContexts<CommandExecutionContext> getCommandContexts() {
+    public static CommandContexts<JDACommandExecutionContext> getCommandContexts() {
         return getSingleton().commandContexts;
     }
 
@@ -189,7 +189,7 @@ public final class JDACommandManager extends CommandManager {
 
     @NotNull
     private static OptionData getOptionData(JDACommandParameter parameter) {
-        CommandContexts<CommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        CommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
         CommandCompletions commandCompletions = JDACommandManager.getCommandCompletions();
 
         OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), !parameter.isOptional());

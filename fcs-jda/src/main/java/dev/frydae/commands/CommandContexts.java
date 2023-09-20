@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.Map;
 
-public final class CommandContexts<R extends CommandExecutionContext> {
+public final class CommandContexts<R extends JDACommandExecutionContext> {
     private final Map<Class<?>, ContextResolver<?, R>> contextMap;
     private final Map<Class<?>, OptionType> typeMap;
 
@@ -108,7 +108,7 @@ public final class CommandContexts<R extends CommandExecutionContext> {
      * @param <R> anonymous function to resolve the input
      */
     @FunctionalInterface
-    public interface ContextResolver<T, R extends CommandExecutionContext> {
+    public interface ContextResolver<T, R extends JDACommandExecutionContext> {
         T resolve(R context) throws IllegalCommandException;
     }
 }
