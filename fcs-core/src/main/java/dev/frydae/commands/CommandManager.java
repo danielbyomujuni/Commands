@@ -40,6 +40,11 @@ public abstract class CommandManager {
     public abstract CommandContexts<? extends CommandExecutionContext> getCommandContexts();
 
     /**
+     * @return the command manager's command completions manager
+     */
+    public abstract CommandCompletions<?> getCommandCompletions();
+
+    /**
      * Searches through the {@link CommandManager#commandCache} for the command.
      * </p>
      * If one isn't found, recursively search through all registered commands for one.

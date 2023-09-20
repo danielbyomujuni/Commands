@@ -1,7 +1,5 @@
 package dev.frydae.commands;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -13,17 +11,15 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public final class JDACommandManager extends CommandManager {
     private static JDACommandManager singleton;
     @Getter private final JDACommandContexts<JDACommandExecutionContext> commandContexts;
-    private final CommandCompletions commandCompletions;
+    @Getter private final JDACommandCompletions commandCompletions;
     private final CommandConditions commandConditions;
     private static JDA jda;
 
@@ -32,7 +28,7 @@ public final class JDACommandManager extends CommandManager {
      */
     private JDACommandManager() {
         this.commandContexts = new JDACommandContexts<>();
-        this.commandCompletions = new CommandCompletions();
+        this.commandCompletions = new JDACommandCompletions();
         this.commandConditions = new CommandConditions();
     }
 
@@ -47,14 +43,6 @@ public final class JDACommandManager extends CommandManager {
     @TestOnly
     public static void resetSingleton() {
         singleton = null;
-    }
-
-
-    /**
-     * @return the command manager's command completions manager
-     */
-    public static CommandCompletions getCommandCompletions() {
-        return getSingleton().commandCompletions;
     }
 
     /**
@@ -73,7 +61,7 @@ public final class JDACommandManager extends CommandManager {
     }
 
     /**
-     * Searches for a matching {@link JDARegisteredCommand} and delegates to {@link CommandCompletions#processAutoComplete}.
+     * Searches for a matching {@link JDARegisteredCommand} and delegates to {@link JDACommandCompletions#processAutoComplete}.
      *
      * @param event the {@link CommandAutoCompleteInteractionEvent}
      */
@@ -81,7 +69,7 @@ public final class JDACommandManager extends CommandManager {
         JDARegisteredCommand command = (JDARegisteredCommand) findRegisteredCommand(event.getFullCommandName());
 
         if (command != null) {
-            getCommandCompletions().processAutoComplete(event, command);
+            getSingleton().getCommandCompletions().processAutoComplete(event, command);
         }
     }
 
@@ -125,7 +113,7 @@ public final class JDACommandManager extends CommandManager {
     @NotNull
     private static OptionData getOptionData(JDACommandParameter parameter) {
         JDACommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getSingleton().getCommandContexts();
-        CommandCompletions commandCompletions = JDACommandManager.getCommandCompletions();
+        JDACommandCompletions commandCompletions = JDACommandManager.getSingleton().getCommandCompletions();
 
         OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), !parameter.isOptional());
 
@@ -133,7 +121,7 @@ public final class JDACommandManager extends CommandManager {
             if (parameter.isAutoComplete()) {
                 optionData.setAutoComplete(true);
             } else {
-                List<Choice> choices = commandCompletions.getChoices(parameter.getCompletion());
+                List<Choice> choices = commandCompletions.getCompletions(parameter.getCompletion());
 
                 if (choices != null) {
                     optionData.addChoices(choices);

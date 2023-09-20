@@ -12,15 +12,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class CommandCompletions {
-    private final Map<String, Function<CommandOptionContext, List<Choice>>> resolverMap;
+public final class JDACommandCompletions extends CommandCompletions<Choice> {
     private final Map<String, Function<CommandAutoCompletionContext, List<Choice>>> autoResolverMap;
 
     /**
      * Creates a new command completion manager.
      */
-    CommandCompletions() {
-        resolverMap = Maps.newHashMap();
+    JDACommandCompletions() {
+        super();
+
         autoResolverMap = Maps.newHashMap();
 
         registerCompletion("fruit", c -> {
@@ -72,39 +72,6 @@ public final class CommandCompletions {
     }
 
     /**
-     * Finds completion choices for a key.
-     *
-     * @param key the key to search for
-     * @return a list of {@link Choice choices} for this key
-     */
-    @Nullable
-    public List<Choice> getChoices(String key) {
-        String[] inputSplit = key.split("\\|");
-
-        String input = inputSplit[0];
-
-        Function<CommandOptionContext, List<Choice>> resolver = getResolver(input);
-
-        if (resolver == null) {
-            return null;
-        }
-
-        CommandOptionContext commandOptionContext = new CommandOptionContext(key);
-
-        return resolver.apply(commandOptionContext);
-    }
-
-    /**
-     * Registers a new completion resolver.
-     *
-     * @param input the input to search for
-     * @param resolver the resolver to register
-     */
-    public void registerCompletion(String input, Function<CommandOptionContext, List<Choice>> resolver) {
-        resolverMap.put(input, resolver);
-    }
-
-    /**
      * Registers a new auto completion resolver.
      *
      * @param input the input to search for
@@ -112,16 +79,6 @@ public final class CommandCompletions {
      */
     public void registerAutoCompletion(String input, Function<CommandAutoCompletionContext, List<Choice>> resolver) {
         autoResolverMap.put(input, resolver);
-    }
-
-    /**
-     * Gets the resolver for a given input.
-     *
-     * @param input the input to search for
-     * @return the resolver for this input
-     */
-    private Function<CommandOptionContext, List<Choice>> getResolver(String input) {
-        return resolverMap.get(input);
     }
 
     /**
