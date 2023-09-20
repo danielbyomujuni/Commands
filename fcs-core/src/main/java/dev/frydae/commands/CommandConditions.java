@@ -4,29 +4,19 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.jetbrains.annotations.Nullable;
 
-public final class CommandConditions {
-    private final Table<Class<?>, String, Condition<?>> conditions;
+public abstract class CommandConditions<CEC extends CommandExecutionContext> {
+    private final Table<Class<?>, String, Condition<?, CEC>> conditions;
 
     /**
      * Creates a new command conditions instance.
      */
-    CommandConditions() {
+    public CommandConditions() {
         conditions = HashBasedTable.create();
 
-        addCondition(Integer.class, "limits", (c, exec, value) -> {
-            if (value == null) {
-                return;
-            }
-
-            if (c.hasConfig("min") && c.getConfig("min", 0) > value) {
-                throw new IllegalCommandException("Min value must be " + c.getConfig("min", 0));
-            }
-
-            if (c.hasConfig("max") && c.getConfig("max", 5) < value) {
-                throw new IllegalCommandException("Max value must be " + c.getConfig("max", 5));
-            }
-        });
+        addConditions();
     }
+
+    public abstract void addConditions();
 
     /**
      * Adds a condition to the manager.
@@ -36,7 +26,7 @@ public final class CommandConditions {
      * @param condition the condition
      * @param <P> the type of the condition
      */
-    public <P> void addCondition(Class<P> clazz, String id, Condition<P> condition) {
+    public <P> void addCondition(Class<P> clazz, String id, Condition<P, CEC> condition) {
         conditions.put(clazz, id.toLowerCase(), condition);
     }
 
@@ -48,7 +38,7 @@ public final class CommandConditions {
      * @return the condition
      */
     @Nullable
-    public Condition<?> getCondition(Class<?> clazz, String id) {
+    public Condition<?, CEC> getCondition(Class<?> clazz, String id) {
         return conditions.get(clazz, id.toLowerCase());
     }
 
@@ -58,7 +48,7 @@ public final class CommandConditions {
      * @param <T> the type to validate
      */
     @FunctionalInterface
-    public interface Condition<T> {
-        void validate(CommandOptionContext context, JDACommandExecutionContext executionContext, T value) throws IllegalCommandException;
+    public interface Condition<T, CEC extends CommandExecutionContext> {
+        void validate(CommandOptionContext context, CEC executionContext, T value) throws IllegalCommandException;
     }
 }

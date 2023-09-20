@@ -105,7 +105,7 @@ public final class CommandHandler {
             if (parameter.hasCondition()) {
                 CommandOptionContext optionContext = new CommandOptionContext(parameter.getCondition());
 
-                CommandConditions.Condition condition = JDACommandManager.getCommandConditions().getCondition(parameter.getParameter().getType(), optionContext.getKey());
+                JDACommandConditions.Condition condition = JDACommandManager.getSingleton().getCommandConditions().getCondition(parameter.getParameter().getType(), optionContext.getKey());
 
                 if (condition != null) {
                     condition.validate(optionContext, context, resolve);

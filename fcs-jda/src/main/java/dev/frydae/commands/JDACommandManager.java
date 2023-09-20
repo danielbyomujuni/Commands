@@ -20,7 +20,7 @@ public final class JDACommandManager extends CommandManager {
     private static JDACommandManager singleton;
     @Getter private final JDACommandContexts<JDACommandExecutionContext> commandContexts;
     @Getter private final JDACommandCompletions commandCompletions;
-    private final CommandConditions commandConditions;
+    @Getter private final JDACommandConditions commandConditions;
     private static JDA jda;
 
     /**
@@ -29,7 +29,7 @@ public final class JDACommandManager extends CommandManager {
     private JDACommandManager() {
         this.commandContexts = new JDACommandContexts<>();
         this.commandCompletions = new JDACommandCompletions();
-        this.commandConditions = new CommandConditions();
+        this.commandConditions = new JDACommandConditions();
     }
 
     public static JDACommandManager getSingleton() {
@@ -43,13 +43,6 @@ public final class JDACommandManager extends CommandManager {
     @TestOnly
     public static void resetSingleton() {
         singleton = null;
-    }
-
-    /**
-     * @return the command manager's command conditions manager
-     */
-    public static CommandConditions getCommandConditions() {
-        return getSingleton().commandConditions;
     }
 
     public static JDA getJDA() {
@@ -132,7 +125,7 @@ public final class JDACommandManager extends CommandManager {
     }
 
     public static void registerCommand(JDABaseCommand baseCommand) {
-        CommandRegistration.registerCommandAliases(baseCommand);
-        CommandRegistration.registerSubCommands(baseCommand);
+        JDACommandRegistration.registerCommandAliases(baseCommand);
+        JDACommandRegistration.registerSubCommands(baseCommand);
     }
 }

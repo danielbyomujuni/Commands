@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public final class CommandRegistration {
+public final class JDACommandRegistration extends CommandRegistration {
     /**
      * Registers registers command aliases for a given base command.
      *
