@@ -14,14 +14,8 @@ public final class JDARegisteredCommand extends RegisteredCommand {
     private final boolean global;
     private final Permission[] permissions;
 
-    public JDARegisteredCommand(@NotNull JDABaseCommand instance, JDARegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, List<JDACommandParameter> parameters, boolean global, Permission[] permissions) {
+    public JDARegisteredCommand(@NotNull BaseCommand instance, RegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, List<CommandParameter> parameters, boolean global, Permission[] permissions) {
         super(instance, parent, baseClass, method, name, description, parameters.stream().map(JDACommandParameter::new).collect(Collectors.toList()));
-        this.global = global;
-        this.permissions = permissions;
-    }
-
-    public JDARegisteredCommand(@NotNull RegisteredCommand base, boolean global, Permission[] permissions) {
-        super(base.getInstance(), base.getParent(), base.getBaseClass(), base.getMethod(), base.getName(), base.getDescription(), base.getParameters());
 
         this.global = global;
         this.permissions = permissions;

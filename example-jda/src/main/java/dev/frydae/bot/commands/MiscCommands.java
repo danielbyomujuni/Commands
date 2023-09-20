@@ -25,6 +25,12 @@ public class MiscCommands extends JDABaseCommand {
         replyHidden(String.valueOf(fish)).queue();
     }
 
+    @CommandAlias("limit")
+    @Description("limit")
+    public void onLimit(@Condition("limits|min=1,max=10") @Name("fish") @Description("fish") Integer fish) {
+        replyHidden(String.valueOf(fish)).queue();
+    }
+
     @CommandAlias("stop")
     @Description("Stops the bot")
     @CommandPermission(Permission.ADMINISTRATOR)

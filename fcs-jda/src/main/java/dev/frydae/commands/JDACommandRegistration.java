@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public final class JDACommandRegistration extends CommandRegistration {
     /**
-     * Registers registers command aliases for a given base command.
+     * Registers command aliases for a given base command.
      *
      * @param baseCommand The base command to register.
      */
@@ -43,13 +43,13 @@ public final class JDACommandRegistration extends CommandRegistration {
                     boolean global = method.isAnnotationPresent(GlobalCommand.class);
 
                     return new JDARegisteredCommand(
-                            (JDABaseCommand) cmd.getInstance(),
-                            (JDARegisteredCommand) cmd.getParent(),
+                            cmd.getInstance(),
+                            cmd.getParent(),
                             cmd.getBaseClass(),
                             cmd.getMethod(),
                             cmd.getName(),
                             cmd.getDescription(),
-                            cmd.getParameters().stream().map(JDACommandParameter::new).toList(),
+                            cmd.getParameters(),
                             global,
                             mergedPerms
                     );
@@ -65,55 +65,23 @@ public final class JDACommandRegistration extends CommandRegistration {
     static void registerSubCommands(JDABaseCommand baseCommand) {
         Class<? extends JDABaseCommand> cmdClass = baseCommand.getClass();
 
-        if (cmdClass.isAnnotationPresent(CommandAlias.class) && !cmdClass.isAnnotationPresent(Disabled.class)) {
-            String alias = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandAlias.class);
-            String description = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, Description.class);
+        RegisteredCommand parentCommand = collectSubcommands(baseCommand);
+
+        if (parentCommand != null) {
+            boolean global = cmdClass.isAnnotationPresent(GlobalCommand.class);
             Permission[] permissions = JDACommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandPermission.class, null);
 
-            boolean global = cmdClass.isAnnotationPresent(GlobalCommand.class);
+            JDARegisteredCommand parent = new JDARegisteredCommand(parentCommand.getInstance(), parentCommand.getParent(), parentCommand.getBaseClass(), parentCommand.getMethod(), parentCommand.getName(), parentCommand.getDescription(), parentCommand.getParameters(), global, permissions);
 
-            JDARegisteredCommand parent = new JDARegisteredCommand(baseCommand, null, cmdClass, null, alias, description, Lists.newArrayList(), global, permissions);
+            for (RegisteredCommand subcommand : parentCommand.getSubcommands()) {
+                Permission[] subPerms = JDACommandManager.getAnnotations().getAnnotationValue(subcommand.getMethod(), CommandPermission.class, null);
 
-            for (Method method : cmdClass.getMethods()) {
-                if (method.isAnnotationPresent(Subcommand.class) && !method.isAnnotationPresent(Disabled.class)) {
-                    String subName = JDACommandManager.getAnnotations().getAnnotationValue(method, Subcommand.class);
-                    String subDesc = JDACommandManager.getAnnotations().getAnnotationValue(method, Description.class);
-                    Permission[] subPerms = JDACommandManager.getAnnotations().getAnnotationValue(method, CommandPermission.class, null);
+                List<CommandParameter> subParams = collectMethodParameters(subcommand.getMethod());
 
-                    List<JDACommandParameter> subParams = getMethodParameters(method);
-
-                    parent.addSubcommand(new JDARegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), method, subName, subDesc, subParams, global, subPerms));
-                }
+                parent.addSubcommand(new JDARegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), subcommand.getMethod(), subcommand.getName(), subcommand.getDescription(), subParams, global, subPerms));
             }
 
             JDACommandManager.getRootCommands().add(parent);
         }
-    }
-
-    /**
-     * Gets the parameters for a given method.
-     *
-     * @param method The method to get the parameters for.
-     * @return A list of command parameters.
-     */
-    private static List<JDACommandParameter> getMethodParameters(Method method) {
-        List<JDACommandParameter> commandParameters = Lists.newArrayList();
-        for (Parameter parameter : method.getParameters()) {
-            boolean optional = parameter.isAnnotationPresent(Optional.class) || parameter.isAnnotationPresent(Default.class);
-
-            JDACommandParameter commandParameter = new JDACommandParameter(
-                    parameter,
-                    JDACommandManager.getAnnotations().getAnnotationValue(parameter, Name.class),
-                    JDACommandManager.getAnnotations().getAnnotationValue(parameter, Description.class),
-                    optional,
-                    JDACommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null),
-                    JDACommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null),
-                    JDACommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null)
-            );
-
-            commandParameters.add(commandParameter);
-        }
-
-        return commandParameters;
     }
 }

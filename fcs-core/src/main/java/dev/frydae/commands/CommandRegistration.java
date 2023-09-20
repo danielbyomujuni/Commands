@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandRegistration {
     protected static List<RegisteredCommand> collectCommandAliases(BaseCommand baseCommand) {
@@ -57,6 +56,12 @@ public class CommandRegistration {
         return null;
     }
 
+    /**
+     * Gets the parameters for a given method.
+     *
+     * @param method The method to get the parameters for.
+     * @return A list of command parameters.
+     */
     protected static List<CommandParameter> collectMethodParameters(Method method) {
         List<CommandParameter> commandParameters = Lists.newArrayList();
 
