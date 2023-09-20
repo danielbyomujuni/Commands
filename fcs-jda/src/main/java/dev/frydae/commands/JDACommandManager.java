@@ -2,6 +2,7 @@ package dev.frydae.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
@@ -21,11 +22,9 @@ import java.util.Map;
 
 public final class JDACommandManager extends CommandManager {
     private static JDACommandManager singleton;
-    private final JDACommandContexts<JDACommandExecutionContext> commandContexts;
+    @Getter private final JDACommandContexts<JDACommandExecutionContext> commandContexts;
     private final CommandCompletions commandCompletions;
     private final CommandConditions commandConditions;
-    private final List<JDARegisteredCommand> rootCommands;
-    private final Map<String, JDARegisteredCommand> commandCache;
     private static JDA jda;
 
     /**
@@ -35,11 +34,9 @@ public final class JDACommandManager extends CommandManager {
         this.commandContexts = new JDACommandContexts<>();
         this.commandCompletions = new CommandCompletions();
         this.commandConditions = new CommandConditions();
-        this.rootCommands = Lists.newArrayList();
-        this.commandCache = Maps.newHashMap();
     }
 
-    private static JDACommandManager getSingleton() {
+    public static JDACommandManager getSingleton() {
         if (singleton == null) {
             singleton = new JDACommandManager();
         }
@@ -52,12 +49,6 @@ public final class JDACommandManager extends CommandManager {
         singleton = null;
     }
 
-    /**
-     * @return the command manager's command contexts manager
-     */
-    public static JDACommandContexts<JDACommandExecutionContext> getCommandContexts() {
-        return getSingleton().commandContexts;
-    }
 
     /**
      * @return the command manager's command completions manager
@@ -71,20 +62,6 @@ public final class JDACommandManager extends CommandManager {
      */
     public static CommandConditions getCommandConditions() {
         return getSingleton().commandConditions;
-    }
-
-    /**
-     * @return the command manager's root commands
-     */
-    public static List<JDARegisteredCommand> getRootCommands() {
-        return getSingleton().rootCommands;
-    }
-
-    /**
-     * @return the command manager's command cache
-     */
-    public static Map<String, JDARegisteredCommand> getCommandCache() {
-        return getSingleton().commandCache;
     }
 
     public static JDA getJDA() {
@@ -101,55 +78,11 @@ public final class JDACommandManager extends CommandManager {
      * @param event the {@link CommandAutoCompleteInteractionEvent}
      */
     public static void processCommandAutoComplete(CommandAutoCompleteInteractionEvent event) {
-        JDARegisteredCommand command = findRegisteredCommand(event.getFullCommandName());
+        JDARegisteredCommand command = (JDARegisteredCommand) findRegisteredCommand(event.getFullCommandName());
 
         if (command != null) {
             getCommandCompletions().processAutoComplete(event, command);
         }
-    }
-
-    /**
-     * Searches through the {@link JDACommandManager#commandCache} for the command.
-     * </p>
-     * If one isn't found, recursively search through all registered commands for one.
-     * If one is then found, add it to {@link JDACommandManager#commandCache}
-     *
-     * @param fullCommandName the full discord command name
-     * @return a {@link JDARegisteredCommand} if found, null otherwise
-     */
-    @Nullable
-    static JDARegisteredCommand findRegisteredCommand(String fullCommandName) {
-        if (getCommandCache().containsKey(fullCommandName)) {
-            return getCommandCache().get(fullCommandName);
-        }
-
-        for (JDARegisteredCommand registeredCommand : getRootCommands()) {
-            if (registeredCommand.getFullName().equalsIgnoreCase(fullCommandName)) {
-                getCommandCache().put(fullCommandName, registeredCommand);
-
-                return registeredCommand;
-            }
-
-            if (registeredCommand.hasSubcommands()) {
-                /*for (JDARegisteredCommand subcommand : registeredCommand.getSubcommands0()) {
-                    if (subcommand.getFullName().equalsIgnoreCase(fullCommandName)) {
-                        getCommandCache().put(fullCommandName, subcommand);
-
-                        return subcommand;
-                    }
-                }*/
-
-                for (RegisteredCommand subcommand : registeredCommand.getSubcommands()) {
-                    if (subcommand.getFullName().equalsIgnoreCase(fullCommandName)) {
-                        getCommandCache().put(fullCommandName, (JDARegisteredCommand) subcommand);
-
-                        return (JDARegisteredCommand) subcommand;
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -158,7 +91,9 @@ public final class JDACommandManager extends CommandManager {
     public static void upsertCommands() {
         CommandListUpdateAction commandListUpdateAction = getJDA().updateCommands();
 
-        for (JDARegisteredCommand command : getRootCommands()) {
+        for (RegisteredCommand cmd : getRootCommands()) {
+            JDARegisteredCommand command = (JDARegisteredCommand) cmd;
+
             SlashCommandData commandData = Commands.slash(command.getName(), command.getDescription());
 
             if (command.getPermissions() != null) {
@@ -189,7 +124,7 @@ public final class JDACommandManager extends CommandManager {
 
     @NotNull
     private static OptionData getOptionData(JDACommandParameter parameter) {
-        JDACommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        JDACommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getSingleton().getCommandContexts();
         CommandCompletions commandCompletions = JDACommandManager.getCommandCompletions();
 
         OptionData optionData = new OptionData(commandContexts.getMapping(parameter.getParameter().getType()), parameter.getName(), parameter.getDescription(), !parameter.isOptional());

@@ -15,7 +15,7 @@ public final class CommandHandler {
      * @param event the {@link SlashCommandInteractionEvent} to process
      */
     public static void processSlashCommand(SlashCommandInteractionEvent event) {
-        JDARegisteredCommand command = JDACommandManager.findRegisteredCommand(event.getFullCommandName());
+        JDARegisteredCommand command = (JDARegisteredCommand) JDACommandManager.findRegisteredCommand(event.getFullCommandName());
 
         // This is so beyond impossible, that I cannot begin to fathom what would need to occur for this to be null.
         // The only thing that I can imagine that could cause the member to be null, is that the universe is indeed
@@ -95,7 +95,7 @@ public final class CommandHandler {
     private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         JDACommandExecutionContext context = new JDACommandExecutionContext(command, parameter, option, event);
 
-        JDACommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
+        JDACommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getSingleton().getCommandContexts().getResolver(parameter.getParameter().getType());
 
         if (resolver == null) {
             return null;
