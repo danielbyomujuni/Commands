@@ -12,15 +12,13 @@ import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.Map;
 
-public final class CommandContexts<R extends JDACommandExecutionContext> {
-    private final Map<Class<?>, ContextResolver<?, R>> contextMap;
+public final class JDACommandContexts<R extends JDACommandExecutionContext> extends CommandContexts<JDACommandExecutionContext> {
     private final Map<Class<?>, OptionType> typeMap;
 
     /**
      * Creates a new command context manager.
      */
-    CommandContexts() {
-        contextMap = Maps.newHashMap();
+    JDACommandContexts() {
         typeMap = Maps.newHashMap();
 
         registerContexts();
@@ -60,17 +58,6 @@ public final class CommandContexts<R extends JDACommandExecutionContext> {
     }
 
     /**
-     * Registers a new context for a specific type.
-     *
-     * @param clazz the class to register
-     * @param handler the handler to register
-     * @param <T> the type to register
-     */
-    public <T> void registerContext(Class<T> clazz, ContextResolver<T, R> handler) {
-        contextMap.put(clazz, handler);
-    }
-
-    /**
      * Registers a new mapping for a specific type.
      *
      * @param clazz the class to register
@@ -82,16 +69,6 @@ public final class CommandContexts<R extends JDACommandExecutionContext> {
     }
 
     /**
-     * Gets the context resolver for a specific class.
-     *
-     * @param clazz the class to get the resolver for
-     * @return the context resolver for the specified class
-     */
-    public ContextResolver<?, R> getResolver(Class<?> clazz) {
-        return contextMap.get(clazz);
-    }
-
-    /**
      * Gets the mapping for a specific class.
      *
      * @param clazz the class to get the mapping for
@@ -99,16 +76,5 @@ public final class CommandContexts<R extends JDACommandExecutionContext> {
      */
     public OptionType getMapping(Class<?> clazz) {
         return typeMap.get(clazz);
-    }
-
-    /**
-     * Converts information from a Discord {@link OptionMapping} to a custom structure.
-     *
-     * @param <T> the type to resolve
-     * @param <R> anonymous function to resolve the input
-     */
-    @FunctionalInterface
-    public interface ContextResolver<T, R extends JDACommandExecutionContext> {
-        T resolve(R context) throws IllegalCommandException;
     }
 }

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 public class CommandContextsTest {
     @Test
     public void testStructure() throws IllegalCommandException {
-        CommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        JDACommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
 
         commandContexts.registerContext(TestStructure.class, c -> new TestStructure(c.getMapping().getAsString()));
 
@@ -32,7 +32,7 @@ public class CommandContextsTest {
 
     @Test
     public void testInteger() throws IllegalCommandException {
-        CommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
+        JDACommandContexts<JDACommandExecutionContext> commandContexts = JDACommandManager.getCommandContexts();
 
         OptionMapping mapping = mock(OptionMapping.class);
         when(mapping.getAsInt()).thenReturn(12);

@@ -95,7 +95,7 @@ public final class CommandHandler {
     private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
         JDACommandExecutionContext context = new JDACommandExecutionContext(command, parameter, option, event);
 
-        CommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
+        JDACommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getCommandContexts().getResolver(parameter.getParameter().getType());
 
         if (resolver == null) {
             return null;
