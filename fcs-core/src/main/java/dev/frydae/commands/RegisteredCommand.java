@@ -1,6 +1,7 @@
 package dev.frydae.commands;
 
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public class RegisteredCommand {
     @NotNull private final String name;
     @NotNull private final String description;
     private final List<CommandParameter> parameters;
-    private RegisteredCommand[] subcommands;
+    private List<RegisteredCommand> subcommands;
 
     public RegisteredCommand(@NotNull BaseCommand instance, RegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, List<CommandParameter> parameters) {
         this.instance = instance;
@@ -26,7 +27,7 @@ public class RegisteredCommand {
         this.name = name;
         this.description = description;
         this.parameters = parameters;
-        this.subcommands = new RegisteredCommand[0];
+        this.subcommands = Lists.newArrayList();
     }
 
     /**
@@ -44,10 +45,10 @@ public class RegisteredCommand {
     }
 
     public void addSubcommand(RegisteredCommand subcommand) {
-        subcommands = CommandUtils.append(subcommands, subcommand);
+        subcommands.add(subcommand);
     }
 
     public boolean hasSubcommands() {
-        return subcommands.length > 0;
+        return !subcommands.isEmpty();
     }
 }
