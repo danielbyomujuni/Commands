@@ -6,13 +6,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Getter
 public final class JDARegisteredCommand extends RegisteredCommand {
-    @Getter private final boolean global;
-    @Getter private final Permission[] permissions;
+    private final boolean global;
+    private final Permission[] permissions;
 
-    public JDARegisteredCommand(@NotNull JDABaseCommand instance, JDARegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, JDACommandParameter[] parameters, boolean global, Permission[] permissions) {
-        super(instance, parent, baseClass, method, name, description, parameters);
+    public JDARegisteredCommand(@NotNull JDABaseCommand instance, JDARegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, List<JDACommandParameter> parameters, boolean global, Permission[] permissions) {
+        super(instance, parent, baseClass, method, name, description, parameters.stream().map(JDACommandParameter::new).collect(Collectors.toList()));
+        this.global = global;
+        this.permissions = permissions;
+    }
+
+    public JDARegisteredCommand(@NotNull RegisteredCommand base, boolean global, Permission[] permissions) {
+        super(base.getInstance(), base.getParent(), base.getBaseClass(), base.getMethod(), base.getName(), base.getDescription(), base.getParameters());
+
         this.global = global;
         this.permissions = permissions;
     }
@@ -22,12 +32,6 @@ public final class JDARegisteredCommand extends RegisteredCommand {
     public @NotNull JDABaseCommand getInstance() {
         return (JDABaseCommand) super.getInstance();
     }
-
-    @Override
-    public JDACommandParameter[] getParameters() {
-        return (JDACommandParameter[]) super.getParameters();
-    }
-
     //<endregion>
 
     /**
@@ -37,7 +41,8 @@ public final class JDARegisteredCommand extends RegisteredCommand {
      * @return a {@link JDACommandParameter} if found, null otherwise
      */
     public JDACommandParameter getParameter(String name) {
-        return Arrays.stream(getParameters())
+        return getParameters().stream()
+                .map(JDACommandParameter::new)
                 .filter(p -> p.getName() != null)
                 .filter(p -> p.getName().equalsIgnoreCase(name))
                 .findFirst().orElse(null);

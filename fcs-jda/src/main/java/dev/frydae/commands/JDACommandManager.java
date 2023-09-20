@@ -82,12 +82,18 @@ public final class JDACommandManager extends CommandManager {
             }
 
             if (!command.hasSubcommands()) {
-                Arrays.stream(command.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
+                command.getParameters().stream()
+                        .map(JDACommandParameter::new)
+                        .map(JDACommandManager::getOptionData)
+                        .forEachOrdered(commandData::addOptions);
             } else {
                 for (RegisteredCommand subcommand : command.getSubcommands()) {
                     SubcommandData subcommandData = new SubcommandData(subcommand.getName(), subcommand.getDescription());
 
-                    Arrays.stream(subcommand.getParameters()).map((CommandParameter parameter) -> getOptionData((JDACommandParameter) parameter)).forEachOrdered(subcommandData::addOptions);
+                    subcommand.getParameters().stream()
+                            .map(JDACommandParameter::new)
+                            .map(JDACommandManager::getOptionData)
+                            .forEachOrdered(subcommandData::addOptions);
 
                     commandData.addSubcommands(subcommandData);
                 }

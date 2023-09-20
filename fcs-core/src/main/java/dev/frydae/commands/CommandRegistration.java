@@ -2,6 +2,7 @@ package dev.frydae.commands;
 
 import com.google.common.collect.Lists;
 import dev.frydae.commands.annotations.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -20,32 +21,61 @@ public class CommandRegistration {
                     String alias = CommandManager.getAnnotations().getAnnotationValue(method, CommandAlias.class);
                     String description = CommandManager.getAnnotations().getAnnotationValue(method, Description.class);
 
-                    CommandParameter[] commandParameters = collectMethodParameters(method);
+                    List<CommandParameter> commandParameters = collectMethodParameters(method);
 
                     return new RegisteredCommand(baseCommand, null, cmdClass, method, alias, description, commandParameters);
                 })
                 .toList();
     }
 
-    protected static CommandParameter[] collectMethodParameters(Method method) {
+    @Nullable
+    protected static RegisteredCommand collectSubcommands(BaseCommand baseCommand) {
+        Class<? extends BaseCommand> cmdClass = baseCommand.getClass();
+
+        if (cmdClass.isAnnotationPresent(CommandAlias.class) && !cmdClass.isAnnotationPresent(Disabled.class)) {
+            String alias = CommandManager.getAnnotations().getAnnotationValue(cmdClass, CommandAlias.class);
+            String description = CommandManager.getAnnotations().getAnnotationValue(cmdClass, Description.class);
+
+            RegisteredCommand parent = new RegisteredCommand(baseCommand, null, cmdClass, null, alias, description, Lists.newArrayList());
+
+            Arrays.stream(cmdClass.getMethods())
+                    .filter(method -> method.isAnnotationPresent(Subcommand.class))
+                    .filter(method -> !method.isAnnotationPresent(Disabled.class))
+                    .map(method -> {
+                        String subName = CommandManager.getAnnotations().getAnnotationValue(method, Subcommand.class);
+                        String subDesc = CommandManager.getAnnotations().getAnnotationValue(method, Description.class);
+
+                        List<CommandParameter> subParams = collectMethodParameters(method);
+
+                        return new RegisteredCommand(parent.getInstance(), parent, parent.getBaseClass(), method, subName, subDesc, subParams);
+                    })
+                    .forEach(parent::addSubcommand);
+
+            return parent;
+        }
+
+        return null;
+    }
+
+    protected static List<CommandParameter> collectMethodParameters(Method method) {
         List<CommandParameter> commandParameters = Lists.newArrayList();
 
         for (Parameter parameter : method.getParameters()) {
             boolean optional = parameter.isAnnotationPresent(Optional.class) || parameter.isAnnotationPresent(Default.class);
 
-            CommandParameter commandParameter = CommandParameter.builder()
-                    .parameter(parameter)
-                    .optional(optional)
-                    .name(CommandManager.getAnnotations().getAnnotationValue(parameter, Name.class))
-                    .description(CommandManager.getAnnotations().getAnnotationValue(parameter, Description.class))
-                    .defaultValue(CommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null))
-                    .completion(CommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null))
-                    .condition(CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null))
-                    .build();
+            CommandParameter commandParameter = new CommandParameter(
+                    parameter,
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Name.class),
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Description.class),
+                    optional,
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null),
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null),
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null)
+            );
 
             commandParameters.add(commandParameter);
         }
 
-        return commandParameters.toArray(new CommandParameter[0]);
+        return commandParameters;
     }
 }

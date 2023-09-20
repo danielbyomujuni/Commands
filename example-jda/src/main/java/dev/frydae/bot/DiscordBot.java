@@ -30,7 +30,12 @@ public class DiscordBot {
 
         jda.awaitReady();
 
-        Commands.registerCommands();
+        try {
+            Commands.registerCommands();
+        } catch (Exception e) {
+            e.printStackTrace();
+            GuildUtil.shutdown();
+        }
 
         startTerminalListener();
     }

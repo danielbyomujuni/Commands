@@ -1,11 +1,13 @@
 package dev.frydae.commands;
 
 import com.google.common.collect.Lists;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 public final class CommandHandler {
@@ -64,19 +66,21 @@ public final class CommandHandler {
     private static Object[] resolveArgs(SlashCommandInteractionEvent event, JDARegisteredCommand command) throws IllegalCommandException {
         List<Object> objects = Lists.newArrayList();
 
-        for (JDACommandParameter parameter : command.getParameters()) {
-            OptionMapping option = event.getOption(parameter.getName());
+        command.getParameters().stream()
+                .map(JDACommandParameter::new)
+                .forEach(parameter -> {
+                    OptionMapping option = event.getOption(parameter.getName());
 
-            if (option == null) {
-                if (parameter.getDefaultValue() != null) {
-                    objects.add(parameter.getDefaultValue());
-                } else {
-                    objects.add(null);
-                }
-            } else {
-                objects.add(resolveParameter(event, command, parameter, option));
-            }
-        }
+                    if (option == null) {
+                        if (parameter.getDefaultValue() != null) {
+                            objects.add(parameter.getDefaultValue());
+                        } else {
+                            objects.add(null);
+                        }
+                    } else {
+                        objects.add(resolveParameter(event, command, parameter, option));
+                    }
+                });
 
         return objects.toArray();
     }
@@ -89,10 +93,10 @@ public final class CommandHandler {
      * @param parameter the {@link JDACommandParameter} to process
      * @param option the {@link OptionMapping} to process
      * @return the resolved parameter
-     * @throws IllegalCommandException if something goes wrong
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) throws IllegalCommandException {
+    @SneakyThrows(IllegalCommandException.class)
+    private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) {
         JDACommandExecutionContext context = new JDACommandExecutionContext(command, parameter, option, event);
 
         JDACommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getSingleton().getCommandContexts().getResolver(parameter.getParameter().getType());

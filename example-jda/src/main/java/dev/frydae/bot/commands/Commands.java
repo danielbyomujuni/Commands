@@ -8,6 +8,7 @@ public class Commands {
      */
     public static void registerCommands() {
         new MiscCommands();
+        new CountCommand();
 
         JDACommandManager.upsertCommands();
     }
