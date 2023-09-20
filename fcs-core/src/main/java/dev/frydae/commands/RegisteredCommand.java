@@ -14,6 +14,7 @@ public class RegisteredCommand {
     @Getter @NotNull private final String name;
     @Getter @NotNull private final String description;
     @Getter private final CommandParameter[] parameters;
+    @Getter private RegisteredCommand[] subcommands;
 
     public RegisteredCommand(@NotNull BaseCommand instance, RegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, CommandParameter[] parameters) {
         this.instance = instance;
@@ -23,6 +24,7 @@ public class RegisteredCommand {
         this.name = name;
         this.description = description;
         this.parameters = parameters;
+        this.subcommands = new RegisteredCommand[0];
     }
 
     /**
@@ -37,5 +39,13 @@ public class RegisteredCommand {
         }
 
         return getName();
+    }
+
+    public void addSubcommand(RegisteredCommand subcommand) {
+        subcommands = CommandUtils.append(subcommands, subcommand);
+    }
+
+    public boolean hasSubcommands() {
+        return subcommands.length > 0;
     }
 }

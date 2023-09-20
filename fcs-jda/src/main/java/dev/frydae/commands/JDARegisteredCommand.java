@@ -1,18 +1,15 @@
 package dev.frydae.commands;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.dv8tion.jda.api.Permission;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
 
-public class JDARegisteredCommand extends RegisteredCommand {
+public final class JDARegisteredCommand extends RegisteredCommand {
     @Getter private final boolean global;
     @Getter private final Permission[] permissions;
-    @Getter private List<JDARegisteredCommand> subcommands = Lists.newArrayList();
 
     public JDARegisteredCommand(@NotNull JDABaseCommand instance, JDARegisteredCommand parent, @NotNull Class<?> baseClass, Method method, @NotNull String name, @NotNull String description, JDACommandParameter[] parameters, boolean global, Permission[] permissions) {
         super(instance, parent, baseClass, method, name, description, parameters);
@@ -46,15 +43,7 @@ public class JDARegisteredCommand extends RegisteredCommand {
                 .findFirst().orElse(null);
     }
 
-    public boolean hasSubcommands() {
-        return !subcommands.isEmpty();
-    }
-
     public boolean hasPermissions() {
         return permissions != null;
-    }
-
-    public void addSubcommand(JDARegisteredCommand command) {
-        subcommands.add(command);
     }
 }

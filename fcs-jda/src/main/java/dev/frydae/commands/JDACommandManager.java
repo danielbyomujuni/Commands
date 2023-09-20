@@ -131,11 +131,19 @@ public final class JDACommandManager extends CommandManager {
             }
 
             if (registeredCommand.hasSubcommands()) {
-                for (JDARegisteredCommand subcommand : registeredCommand.getSubcommands()) {
+                /*for (JDARegisteredCommand subcommand : registeredCommand.getSubcommands0()) {
                     if (subcommand.getFullName().equalsIgnoreCase(fullCommandName)) {
                         getCommandCache().put(fullCommandName, subcommand);
 
                         return subcommand;
+                    }
+                }*/
+
+                for (RegisteredCommand subcommand : registeredCommand.getSubcommands()) {
+                    if (subcommand.getFullName().equalsIgnoreCase(fullCommandName)) {
+                        getCommandCache().put(fullCommandName, (JDARegisteredCommand) subcommand);
+
+                        return (JDARegisteredCommand) subcommand;
                     }
                 }
             }
@@ -160,10 +168,10 @@ public final class JDACommandManager extends CommandManager {
             if (!command.hasSubcommands()) {
                 Arrays.stream(command.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(commandData::addOptions);
             } else {
-                for (JDARegisteredCommand subcommand : command.getSubcommands()) {
+                for (RegisteredCommand subcommand : command.getSubcommands()) {
                     SubcommandData subcommandData = new SubcommandData(subcommand.getName(), subcommand.getDescription());
 
-                    Arrays.stream(subcommand.getParameters()).map(JDACommandManager::getOptionData).forEachOrdered(subcommandData::addOptions);
+                    Arrays.stream(subcommand.getParameters()).map((CommandParameter parameter) -> getOptionData((JDACommandParameter) parameter)).forEachOrdered(subcommandData::addOptions);
 
                     commandData.addSubcommands(subcommandData);
                 }
