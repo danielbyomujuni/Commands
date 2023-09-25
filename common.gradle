@@ -13,7 +13,6 @@ tasks.withType(JavaCompile).configureEach {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 
     maven {
         name "maven-frydae"
