@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 
 public final class CommandHandler {
@@ -99,7 +98,7 @@ public final class CommandHandler {
     private static Object resolveParameter(SlashCommandInteractionEvent event, JDARegisteredCommand command, JDACommandParameter parameter, OptionMapping option) {
         JDACommandExecutionContext context = new JDACommandExecutionContext(command, parameter, option, event);
 
-        JDACommandContexts.ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getSingleton().getCommandContexts().getResolver(parameter.getParameter().getType());
+        ContextResolver<?, JDACommandExecutionContext> resolver = JDACommandManager.getSingleton().getCommandContexts().getResolver(parameter.getParameter().getType());
 
         if (resolver == null) {
             return null;
