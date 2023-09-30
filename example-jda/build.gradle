@@ -27,7 +27,7 @@ dependencies {
     implementation project(':fcs-jda')
     annotationProcessor project(':fcs-jda')
 
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.13') {
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.14') {
         exclude module: "opus-java"
     }
 }
