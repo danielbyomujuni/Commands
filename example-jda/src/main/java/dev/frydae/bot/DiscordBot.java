@@ -4,7 +4,7 @@ import dev.frydae.bot.commands.Commands;
 import dev.frydae.bot.listeners.CommandListener;
 import dev.frydae.bot.utils.CaselessHashMap;
 import dev.frydae.bot.utils.GuildUtil;
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.JDACommandManager;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -25,12 +25,17 @@ public class DiscordBot {
 
         setupJDA();
 
-        CommandManager.setJDA(jda);
-        CommandManager.setLogger(logger);
+        JDACommandManager.setJDA(jda);
+        JDACommandManager.setLogger(logger);
 
         jda.awaitReady();
 
-        Commands.registerCommands();
+        try {
+            Commands.registerCommands();
+        } catch (Exception e) {
+            e.printStackTrace();
+            GuildUtil.shutdown();
+        }
 
         startTerminalListener();
     }

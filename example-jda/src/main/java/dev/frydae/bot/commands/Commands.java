@@ -1,6 +1,6 @@
 package dev.frydae.bot.commands;
 
-import dev.frydae.jda.commands.core.CommandManager;
+import dev.frydae.commands.JDACommandManager;
 
 public class Commands {
     /**
@@ -8,7 +8,8 @@ public class Commands {
      */
     public static void registerCommands() {
         new MiscCommands();
+        new CountCommand();
 
-        CommandManager.upsertCommands();
+        JDACommandManager.upsertCommands();
     }
 }

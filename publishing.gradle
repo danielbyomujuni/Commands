@@ -1,0 +1,76 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    repositories {
+        maven {
+            name = "frydaeRepository"
+            url = "https://maven.frydae.dev/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+
+    publications {
+        base(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            from components.java
+        }
+
+        if (project.hasProperty("revisionNumber")) {
+            revision(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = getRevisionVersion(project)
+
+                from components.java
+            }
+
+            latest(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = "LATEST"
+
+                from components.java
+            }
+        }
+    }
+}
+
+static String getRevisionVersion(Project project) {
+    def propertiesFile = project.file("gradle.properties")
+
+    if (!propertiesFile.exists()) {
+        return project.version
+    }
+
+    // Read the properties file
+    def properties = new Properties()
+    properties.load(propertiesFile.newDataInputStream())
+
+    def currentVersion = properties.getProperty("projectVersion")
+    Integer currentRevision = properties.getProperty("revisionNumber") as Integer
+
+    if (currentVersion == null) {
+        properties.setProperty("projectVersion", project.version)
+        properties.store(propertiesFile.newWriter(), null)
+        properties.load(propertiesFile.newDataInputStream())
+    }
+
+    if (currentVersion != project.version) {
+        properties.setProperty("revisionNumber", "1")
+    } else {
+        currentRevision++
+
+        properties.setProperty("revisionNumber", currentRevision as String)
+    }
+
+    properties.store(propertiesFile.newWriter(), null)
+
+    return project.version + "_" + currentRevision
+}
