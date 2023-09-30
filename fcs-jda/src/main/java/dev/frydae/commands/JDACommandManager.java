@@ -126,7 +126,12 @@ public final class JDACommandManager extends CommandManager {
                     optionData.addChoices(choices);
                 }
             }
+        } else if (parameter.hasValues()) {
+            List<Choice> choices = Arrays.stream(parameter.getValues().split("\\|")).map(c -> new Choice(c, c)).toList();
+
+            optionData.addChoices(choices);
         }
+
         return optionData;
     }
 

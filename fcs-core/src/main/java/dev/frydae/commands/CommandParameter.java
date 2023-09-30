@@ -15,8 +15,9 @@ public class CommandParameter {
     @Nullable protected String defaultValue;
     protected String completion;
     protected String condition;
+    protected String values;
 
-    public CommandParameter(@NotNull Parameter parameter, @NotNull String name, @NotNull String description, boolean optional, @Nullable String defaultValue, String completion, String condition) {
+    public CommandParameter(@NotNull Parameter parameter, @NotNull String name, @NotNull String description, boolean optional, @Nullable String defaultValue, String completion, String condition, String values) {
         this.parameter = parameter;
         this.name = name;
         this.description = description;
@@ -24,6 +25,11 @@ public class CommandParameter {
         this.defaultValue = defaultValue;
         this.completion = completion;
         this.condition = condition;
+        this.values = values;
+    }
+
+    public boolean hasValues() {
+        return values != null;
     }
 
     public boolean hasCompletion() {

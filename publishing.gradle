@@ -54,7 +54,7 @@ static String getRevisionVersion(Project project) {
     properties.load(propertiesFile.newDataInputStream())
 
     def currentVersion = properties.getProperty("projectVersion")
-    def currentRevision = properties.getProperty("revisionNumber")
+    Integer currentRevision = properties.getProperty("revisionNumber") as Integer
 
     if (currentVersion == null) {
         properties.setProperty("projectVersion", project.version)
@@ -67,7 +67,7 @@ static String getRevisionVersion(Project project) {
     } else {
         currentRevision++
 
-        properties.setProperty("revisionNumber", currentRevision)
+        properties.setProperty("revisionNumber", currentRevision as String)
     }
 
     properties.store(propertiesFile.newWriter(), null)

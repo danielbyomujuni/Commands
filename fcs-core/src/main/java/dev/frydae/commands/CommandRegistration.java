@@ -75,7 +75,8 @@ public class CommandRegistration {
                     optional,
                     CommandManager.getAnnotations().getAnnotationValue(parameter, Default.class, null),
                     CommandManager.getAnnotations().getAnnotationValue(parameter, Completion.class, null),
-                    CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null)
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Condition.class, null),
+                    CommandManager.getAnnotations().getAnnotationValue(parameter, Values.class, null)
             );
 
             commandParameters.add(commandParameter);

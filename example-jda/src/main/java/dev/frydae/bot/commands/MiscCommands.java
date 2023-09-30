@@ -13,6 +13,12 @@ public class MiscCommands extends JDABaseCommand {
         replyHidden(":ping_pong: Pong!").queue();
     }
 
+    @CommandAlias("values")
+    @Description("test values")
+    public void onValues(@Values("fish|turtle|penguin|ice cream") @Name("fish") @Description("fish") String fish) {
+        replyHidden(fish).queue();
+    }
+
     @CommandAlias("range")
     @Description("test")
     public void onTest(@Completion("range|1-5") @Name("range") @Description("range") Integer fish) {
