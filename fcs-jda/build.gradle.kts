@@ -3,7 +3,7 @@ plugins {
     id ("io.freefair.lombok") version "8.3"
 }
 
-val jdaVersion = "5.0.0-beta.14"
+val jdaVersion = "5.0.0-beta.15"
 
 group = "dev.frydae"
 version = jdaVersion
