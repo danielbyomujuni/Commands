@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -20,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -169,7 +169,15 @@ public final class FabricCommandManager extends CommandManager {
 
             command.getMethod().invoke(command.getInstance(), resolveArgs(command, context));
         } catch (IllegalCommandException e) {
-            context.getSource().sendMessage(Text.literal(e.getMessage()).formatted(Formatting.RED));
+            MutableText literal = Text.literal(e.getMessage());
+
+            // If the message contains a section sign, this means it's already been formatted and color corrected
+            // Otherwise, just make the entire message red because it's an error
+            if (!e.getMessage().contains("\u00A7")) {
+                literal = literal.formatted(Formatting.RED);
+            }
+
+            context.getSource().sendMessage(literal);
         }
 
         return 1;
