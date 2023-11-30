@@ -105,9 +105,12 @@ public final class FabricCommandManager extends CommandManager {
             }
         }
 
-        builder = builder.requires(p -> command.getSubcommands().stream()
-                .map(s -> (FabricRegisteredCommand) s)
-                .anyMatch(scmd -> checkPermissions(p, scmd.getPermission())));
+        if (command.getSubcommands().stream().map(s -> (FabricRegisteredCommand) s).anyMatch(FabricRegisteredCommand::hasPermission)) {
+            builder = builder.requires(p ->
+                    command.getSubcommands().stream()
+                            .map(s -> (FabricRegisteredCommand) s)
+                            .anyMatch(scmd -> checkPermissions(p, scmd.getPermission())));
+        }
 
         return builder;
     }
