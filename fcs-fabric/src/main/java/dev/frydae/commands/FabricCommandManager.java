@@ -7,11 +7,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.frydae.accessmanager.PermissionStore;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -21,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -30,11 +29,14 @@ public final class FabricCommandManager extends CommandManager {
     @Getter private final FabricCommandContexts commandContexts;
     @Getter private final FabricCommandCompletions commandCompletions;
     @Getter private final FabricCommandConditions commandConditions;
+    private BiFunction<ServerCommandSource, String, Boolean> permissionFunction;
 
     private FabricCommandManager() {
         this.commandContexts = new FabricCommandContexts();
         this.commandCompletions = new FabricCommandCompletions();
         this.commandConditions = new FabricCommandConditions();
+
+        this.permissionFunction = null;
     }
 
     public static FabricCommandManager getSingleton() {
@@ -51,24 +53,26 @@ public final class FabricCommandManager extends CommandManager {
     }
 
     private static boolean checkPermissions(ServerCommandSource source, String permission) {
-        boolean permsModFound = FabricLoader.getInstance().getAllMods().stream().anyMatch(m -> m.getMetadata().getId().equalsIgnoreCase("access-manager"));
-
-        if (permsModFound) {
-            return PermissionStore.hasPermission(Objects.requireNonNull(source.getPlayer()), permission);
+        if (FabricCommandManager.getSingleton().permissionFunction != null) {
+            return FabricCommandManager.getSingleton().permissionFunction.apply(source, permission);
         } else {
             return source.hasPermissionLevel(1);
         }
     }
 
-    public static void upsertCommands() {
+    public void registerPermissionFunction(BiFunction<ServerCommandSource, String, Boolean> permissionFunction) {
+        this.permissionFunction = permissionFunction;
+    }
+
+    public static void registerCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 getRootCommands().stream()
                         .map(cmd -> (FabricRegisteredCommand) cmd)
-                        .forEach(command -> upsertCommand(dispatcher, command))
+                        .forEach(command -> registerCommand(dispatcher, command))
         );
     }
 
-    private static void upsertCommand(CommandDispatcher<ServerCommandSource> dispatcher, FabricRegisteredCommand command) {
+    private static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, FabricRegisteredCommand command) {
         for (String alias : command.getAliases()) {
             LiteralArgumentBuilder<ServerCommandSource> builder = literal(alias);
 

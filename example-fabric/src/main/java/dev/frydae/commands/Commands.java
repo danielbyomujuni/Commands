@@ -6,6 +6,6 @@ public class Commands {
         new TestCommand();
         new PermsCommand();
 
-        FabricCommandManager.upsertCommands();
+        FabricCommandManager.registerCommands();
     }
 }

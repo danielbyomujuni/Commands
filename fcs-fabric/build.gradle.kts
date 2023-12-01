@@ -13,11 +13,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 
-    modImplementation("dev.frydae:accessmanager:${property("access_manager_version")!!}-SNAPSHOT") {
-        exclude(group = "dev.frydae", module = "fcs-fabric")
-    }
-
-    api(project(":fcs-core"))
+    api(project(":fcs-core"))?.let { include(it) }
 }
 
 tasks {
@@ -29,16 +25,6 @@ tasks {
             expand(mutableMapOf(
                     "version" to project.version
             ))
-        }
-    }
-
-    jar {
-        from("LICENSE")
-    }
-
-    shadowJar {
-        dependencies {
-            include(project(":fcs-core"))
         }
     }
 }
