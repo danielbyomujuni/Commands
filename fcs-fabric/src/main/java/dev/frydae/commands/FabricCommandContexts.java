@@ -3,6 +3,7 @@ package dev.frydae.commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -27,6 +28,17 @@ public class FabricCommandContexts extends CommandContexts<FabricCommandExecutio
             }
 
             return player;
+        });
+        registerContext(ServerWorld.class, c -> {
+            String text = c.getParameterText();
+
+            if (text.equalsIgnoreCase("here")) {
+                return c.getContext().getSource().getPlayer().getServerWorld();
+            }
+
+            MinecraftServer server = c.getContext().getSource().getServer();
+
+            return server.getWorldRegistryKeys().stream().filter(r -> r.getValue().toString().equals(text)).findFirst().map(server::getWorld).orElse(null);
         });
     }
 }
