@@ -36,4 +36,10 @@ public class TestCommand extends FabricBaseCommand {
     public void onRange(@Name("num") @Description("num") @Condition("limits|min=1,max=10") Integer num) {
         reply(Text.literal(num.toString()));
     }
+
+    @Subcommand("greedy")
+    @Description("greedy")
+    public void onGreedy(@Name("greedy") @Description("greedy") @GreedyString String greedy) {
+        reply(Text.literal(greedy));
+    }
 }

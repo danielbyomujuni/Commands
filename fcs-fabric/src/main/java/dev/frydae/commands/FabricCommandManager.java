@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import dev.frydae.commands.annotations.GreedyString;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -120,7 +121,14 @@ public final class FabricCommandManager extends CommandManager {
         for (CommandParameter param : CommandUtils.reverseList(command.getParameters())) {
             FabricCommandParameter commandParameter = (FabricCommandParameter) param;
 
-            RequiredArgumentBuilder<ServerCommandSource, String> argument = argument(commandParameter.getName(), StringArgumentType.word());
+            StringArgumentType type;
+            if (commandParameter.parameter.getType().equals(String.class) && commandParameter.parameter.isAnnotationPresent(GreedyString.class)) {
+                type = StringArgumentType.greedyString();
+            } else {
+                type = StringArgumentType.word();
+            }
+
+            RequiredArgumentBuilder<ServerCommandSource, String> argument = argument(commandParameter.getName(), type);
 
             argument = setupParameterCompletions(commandParameter, argument);
 
