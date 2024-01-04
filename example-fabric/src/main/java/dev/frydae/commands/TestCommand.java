@@ -1,6 +1,13 @@
 package dev.frydae.commands;
 
-import dev.frydae.commands.annotations.*;
+import dev.frydae.commands.annotations.CommandAlias;
+import dev.frydae.commands.annotations.Completion;
+import dev.frydae.commands.annotations.Condition;
+import dev.frydae.commands.annotations.Description;
+import dev.frydae.commands.annotations.GreedyString;
+import dev.frydae.commands.annotations.Name;
+import dev.frydae.commands.annotations.Subcommand;
+import dev.frydae.commands.annotations.Values;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.text.Text;

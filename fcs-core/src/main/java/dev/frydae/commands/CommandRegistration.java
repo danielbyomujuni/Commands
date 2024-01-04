@@ -1,15 +1,22 @@
 package dev.frydae.commands;
 
 import com.google.common.collect.Lists;
-import dev.frydae.commands.annotations.*;
+import dev.frydae.commands.annotations.CommandAlias;
+import dev.frydae.commands.annotations.Completion;
+import dev.frydae.commands.annotations.Condition;
+import dev.frydae.commands.annotations.Default;
+import dev.frydae.commands.annotations.Description;
+import dev.frydae.commands.annotations.Disabled;
+import dev.frydae.commands.annotations.Name;
+import dev.frydae.commands.annotations.Optional;
+import dev.frydae.commands.annotations.Subcommand;
+import dev.frydae.commands.annotations.Values;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandRegistration {
     protected static List<RegisteredCommand> collectCommandAliases(BaseCommand baseCommand) {

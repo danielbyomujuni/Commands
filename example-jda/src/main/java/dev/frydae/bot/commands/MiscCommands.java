@@ -1,8 +1,15 @@
 package dev.frydae.bot.commands;
 
 import dev.frydae.bot.utils.GuildUtil;
-import dev.frydae.commands.annotations.*;
 import dev.frydae.commands.JDABaseCommand;
+import dev.frydae.commands.annotations.CommandAlias;
+import dev.frydae.commands.annotations.CommandPermission;
+import dev.frydae.commands.annotations.Completion;
+import dev.frydae.commands.annotations.Condition;
+import dev.frydae.commands.annotations.Description;
+import dev.frydae.commands.annotations.GlobalCommand;
+import dev.frydae.commands.annotations.Name;
+import dev.frydae.commands.annotations.Values;
 import net.dv8tion.jda.api.Permission;
 
 public class MiscCommands extends JDABaseCommand {
