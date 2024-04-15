@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "dev.frydae"
-version = "${property("jda_version")}-SNAPSHOT"
+version = "${property("jda_version")}"
 
 apply(from = uri("https://files.frydae.dev/gradle/publishing.gradle"))
 
